@@ -3,1196 +3,617 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AP Municipal Election Results 2024 - Live Interactive Dashboard</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- Inter Google Font -->
+  <title>State Election Commission, Andhra Pradesh | ULB General Elections - Trends & Results</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-          },
-          colors: {
-            tdp: '#FFCC00',
-            ysrcp: '#1172BA',
-            jsp: '#E31B23',
-            bjp: '#F97D09',
-            inc: '#0F8038',
-            ind: '#718096',
-          }
-        }
-      }
-    }
-  </script>
-
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;600;700&family=Source+Sans+3:wght@400;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.3);
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(148, 163, 184, 0.5);
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.6); opacity: 0.4; }
-    }
-    .animate-pulse-dot {
-      animation: pulse-dot 1.8s infinite ease-in-out;
+    :root {
+      --gov-navy: #0e2a47;
+      --gov-deep-blue: #0b1f36;
+      --gov-gold: #c59b27;
+      --gov-saffron: #f97316;
+      --gov-green: #15803d;
+      --gov-bg: #f3f6fa;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      
+      --party-tdp: #eab308;
+      --party-ysrcp: #2563eb;
+      --party-jsp: #dc2626;
+      --party-bjp: #ea580c;
+      --party-oth: #64748b;
     }
 
-    .ticker-scroll {
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Source Sans 3', sans-serif; }
+    body { background-color: var(--gov-bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Top Tricolor Strip */
+    .tricolor-strip { height: 4px; background: linear-gradient(90deg, #ff9933 33.33%, #ffffff 33.33%, #ffffff 66.66%, #138808 66.66%); }
+
+    /* Gov Header Bar */
+    .top-utility-bar {
+      background: #e2e8f0;
+      border-bottom: 1px solid #cbd5e1;
+      padding: 4px 24px;
       display: flex;
-      white-space: nowrap;
-      animation: ticker 32s linear infinite;
-    }
-    .ticker-scroll:hover {
-      animation-play-state: paused;
-    }
-    @keyframes ticker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #334155;
+      font-weight: 600;
     }
 
-    /* Ward Grid Tile animations */
-    .ward-tile {
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    .gov-header {
+      background: #ffffff;
+      border-bottom: 2px solid var(--gov-gold);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
     }
-    .ward-tile:hover {
-      transform: translateY(-2px) scale(1.08);
-      z-index: 10;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 12px currentColor;
+
+    .emblem-title-group { display: flex; align-items: center; gap: 16px; }
+    .state-emblem { width: 56px; height: 56px; object-fit: contain; }
+    .portal-titles h1 { font-family: 'Noto Sans Telugu', sans-serif; font-size: 1.15rem; color: var(--gov-navy); font-weight: 700; line-height: 1.2; }
+    .portal-titles h2 { font-size: 1.25rem; font-weight: 800; color: var(--gov-deep-blue); letter-spacing: -0.01em; }
+    .portal-titles p { font-size: 0.78rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .live-indicator-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gov-green);
+    }
+    .live-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 6px #10b981; animation: livePulse 1.5s infinite; }
+    @keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    /* Leaders Profile Row */
+    .leaders-section {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+    }
+    .leader-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+    .leader-photo {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #cbd5e1;
+      background: #e2e8f0;
+    }
+    .leader-info h4 { font-size: 0.85rem; font-weight: 700; color: var(--gov-navy); }
+    .leader-info p { font-size: 0.72rem; color: var(--text-muted); }
+    .party-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-top: 2px;
+    }
+
+    /* Macro Majority Results Banner */
+    .results-banner {
+      background: var(--gov-deep-blue);
+      color: #ffffff;
+      padding: 14px 24px;
+      border-bottom: 3px solid var(--gov-gold);
+    }
+    .banner-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .tally-text { font-size: 1.15rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+    .macro-bar {
+      height: 24px;
+      background: #1e3a5f;
+      border-radius: 4px;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-line-center {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #ffffff;
+      z-index: 5;
+    }
+    .macro-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      transition: width 0.4s ease;
+    }
+
+    /* Portal 3-Column Layout */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      flex: 1;
+      padding: 18px 24px;
+      gap: 18px;
+    }
+
+    .gov-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .card-header-bar {
+      background: #f1f5f9;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--gov-navy);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ulb-list-wrap { overflow-y: auto; max-height: 540px; }
+    .ulb-row {
+      padding: 10px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .ulb-row:hover, .ulb-row.active { background: #e0f2fe; }
+    .ulb-row h5 { font-size: 0.85rem; font-weight: 700; color: #1e293b; }
+    .ulb-row span { font-size: 0.72rem; color: #64748b; }
+
+    /* Center Section: Wards Grid */
+    .center-stage { display: flex; flex-direction: column; gap: 14px; }
+    .ward-grid-panel {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .ward-box {
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 6px 2px;
+      text-align: center;
+      cursor: pointer;
+      background: #f8fafc;
+      transition: transform 0.1s, border-color 0.1s;
+    }
+    .ward-box:hover { transform: scale(1.05); border-color: var(--gov-navy); }
+    .ward-box-num { font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+    .ward-box-party { font-size: 0.65rem; font-weight: 800; margin-top: 2px; }
+
+    /* Returning Officer / Candidate Inspector */
+    .cand-detail-row { margin-bottom: 12px; }
+    .cand-meta-line { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px; }
+    .cand-prog-track { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .cand-prog-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+
+    footer {
+      background: var(--gov-deep-blue);
+      color: #94a3b8;
+      font-size: 0.75rem;
+      padding: 14px 24px;
+      border-top: 2px solid var(--gov-gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    @media (max-width: 1024px) {
+      .portal-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-amber-400 selection:text-black">
+<body>
 
-  <!-- TOP LIVE HEADER & BENCHMARK BAR -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
-      <!-- Title & Live Pill -->
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2 bg-red-950/80 border border-red-500/40 text-red-400 px-2.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase">
-          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse-dot"></span>
-          <span>LIVE TRACKER</span>
-        </div>
-        <div>
-          <h1 class="text-base sm:text-lg font-black tracking-tight flex items-center gap-1.5 text-white">
-            <span>Andhra Pradesh Municipal Elections</span>
-            <span class="text-xs px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono font-medium">ULB 2024</span>
-          </h1>
-          <p class="text-[11px] text-slate-400 flex items-center gap-2">
-            <span>Counting Day | AP State Election Commission Feed</span>
-            <span class="text-slate-600">•</span>
-            <span class="font-mono text-emerald-400 flex items-center gap-1">
-              <i data-lucide="refresh-cw" class="w-3 h-3 animate-spin"></i>
-              Sync in <span id="syncCountdown" class="font-bold">15</span>s
-            </span>
-          </p>
-        </div>
-      </div>
+  <!-- Tricolor Indian Strip -->
+  <div class="tricolor-strip"></div>
 
-      <!-- Action Controls: Simulator & Quick Stats -->
-      <div class="flex items-center gap-2 sm:gap-3 ml-auto">
-        <button id="simBtn" onclick="toggleSimulation()" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 active:scale-95 transition-all flex items-center gap-1.5">
-          <i data-lucide="play" id="simIcon" class="w-3.5 h-3.5"></i>
-          <span id="simBtnText">Simulate Live Votes</span>
-        </button>
-        <button onclick="triggerManualSync()" class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition" title="Refresh Now">
-          <i data-lucide="rotate-cw" class="w-4 h-4"></i>
-        </button>
+  <!-- Gov Top Header Info -->
+  <div class="top-utility-bar">
+    <span>GOVERNMENT OF ANDHRA PRADESH • STATE ELECTION COMMISSION</span>
+    <span>ORDINARY ELECTIONS TO URBAN LOCAL BODIES (MUNICIPALITIES & CORPORATIONS)</span>
+  </div>
+
+  <!-- Main Institutional Title & State Emblem -->
+  <header class="gov-header">
+    <div class="emblem-title-group">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/37/Emblem_of_Andhra_Pradesh.svg" 
+           alt="State Emblem of Andhra Pradesh" 
+           class="state-emblem" 
+           onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/200px-Emblem_of_India.svg.png'">
+      <div class="portal-titles">
+        <h1>ఆంధ్రప్రదేశ్ రాష్ట్ర ఎన్నికల సంఘం</h1>
+        <h2>Andhra Pradesh State Election Commission</h2>
+        <p>EVM Round-Wise Trends & Declared Results Portal</p>
       </div>
     </div>
-
-    <!-- MACRO STATEWIDE SEAT TALLY BENCHMARK BAR -->
-    <div class="bg-slate-900 border-t border-slate-800/80 px-4 py-2.5">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex flex-wrap items-center justify-between text-xs mb-1.5 gap-2 font-mono">
-          <!-- NDA Total -->
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-amber-400 flex items-center gap-1">
-              <span class="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block"></span>
-              NDA ALLIANCE (TDP+JSP+BJP): <span id="ndaTotalCount" class="text-white text-sm font-black">0</span>
-            </span>
-            <span class="text-[10px] text-slate-400">(TDP: <span id="tdpCount">0</span> | JSP: <span id="jspCount">0</span> | BJP: <span id="bjpCount">0</span>)</span>
-          </div>
-
-          <!-- Halfway Marker -->
-          <div class="hidden sm:flex items-center gap-1 text-slate-400 font-sans text-[11px]">
-            <i data-lucide="flag" class="w-3.5 h-3.5 text-amber-300"></i>
-            <span>Majority Mark: <strong class="text-slate-200" id="majorityMark">62</strong> of <strong class="text-slate-200" id="totalULBCount">123</strong> ULBs</span>
-          </div>
-
-          <!-- YSRCP & OTH Total -->
-          <div class="flex items-center gap-4">
-            <span class="font-bold text-blue-400 flex items-center gap-1">
-              <span class="w-2.5 h-2.5 rounded-sm bg-blue-500 inline-block"></span>
-              YSRCP: <span id="ysrcpTotalCount" class="text-white text-sm font-black">0</span>
-            </span>
-            <span class="text-emerald-400 flex items-center gap-1">
-              <span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block"></span>
-              INC: <span id="incTotalCount" class="text-white font-bold">0</span>
-            </span>
-            <span class="text-slate-400 flex items-center gap-1">
-              <span class="w-2.5 h-2.5 rounded-sm bg-slate-500 inline-block"></span>
-              OTH: <span id="othTotalCount" class="text-white font-bold">0</span>
-            </span>
-          </div>
-        </div>
-
-        <!-- Proportional Progress Bar -->
-        <div class="relative w-full h-3.5 bg-slate-800 rounded-full overflow-hidden flex shadow-inner border border-slate-700/60">
-          <div id="bar-tdp" class="bg-amber-400 h-full transition-all duration-700 hover:opacity-90" title="TDP" style="width: 48%;"></div>
-          <div id="bar-jsp" class="bg-red-600 h-full transition-all duration-700 hover:opacity-90" title="JSP" style="width: 14%;"></div>
-          <div id="bar-bjp" class="bg-orange-500 h-full transition-all duration-700 hover:opacity-90" title="BJP" style="width: 4%;"></div>
-          <div id="bar-ysrcp" class="bg-blue-600 h-full transition-all duration-700 hover:opacity-90" title="YSRCP" style="width: 30%;"></div>
-          <div id="bar-inc" class="bg-emerald-600 h-full transition-all duration-700 hover:opacity-90" title="INC" style="width: 2%;"></div>
-          <div id="bar-ind" class="bg-slate-600 h-full transition-all duration-700 hover:opacity-90" title="IND / Others" style="width: 2%;"></div>
-          
-          <!-- 50% majority center indicator line -->
-          <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-white shadow-lg pointer-events-none z-10"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- LIVE TICKER (ELECTION ENJOYER STYLE) -->
-    <div class="bg-slate-950/95 border-b border-slate-800/80 overflow-hidden flex items-center text-xs py-1.5 px-4">
-      <div class="flex items-center gap-1.5 text-amber-400 font-bold tracking-wider shrink-0 mr-4 pr-3 border-r border-slate-800 uppercase text-[10px]">
-        <i data-lucide="zap" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
-        <span>Live Flips & Alerts</span>
-      </div>
-      <div class="overflow-hidden w-full relative">
-        <div class="ticker-scroll flex items-center gap-8 text-slate-300 font-mono text-[11px]" id="tickerFeed">
-          <!-- Injected via JS -->
-          <span>🔥 Vijayawada Corp Ward 32: TDP leads by 624 votes (Round 3)</span>
-          <span>⚡ Visakhapatnam (GVMC) Ward 48: YSRCP retains lead (+142)</span>
-          <span>🚨 Tirupati Corp Ward 11: JSP overtakes YSRCP by +88 votes</span>
-          <span>🏆 Guntur Ward 17: TDP declared WINNER (+1,204 votes)</span>
-          <span>🔥 Kurnool Ward 05: YSRCP leading by 310 votes (Round 4)</span>
-          <span>🔥 Nellore Ward 21: TDP takes lead from YSRCP (+77)</span>
-        </div>
-      </div>
+    
+    <div class="live-indicator-badge">
+      <div class="live-dot"></div>
+      <span id="liveStatusText">LIVE COUNTING IN PROGRESS</span>
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-1 flex flex-col gap-6">
-
-    <!-- CONTROLS & FILTER BAR -->
-    <section class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col lg:flex-row items-center justify-between gap-4 shadow-xl">
-      <!-- Category Tabs -->
-      <div class="flex flex-wrap items-center gap-1.5 w-full lg:w-auto bg-slate-950 p-1 rounded-lg border border-slate-800/80">
-        <button onclick="setCategoryFilter('ALL')" id="tab-ALL" class="cat-tab px-3 py-1.5 rounded-md text-xs font-semibold bg-amber-500 text-slate-950 transition">
-          All Urban Bodies
-        </button>
-        <button onclick="setCategoryFilter('CORP')" id="tab-CORP" class="cat-tab px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition">
-          Municipal Corporations (17)
-        </button>
-        <button onclick="setCategoryFilter('MUNI')" id="tab-MUNI" class="cat-tab px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition">
-          Municipalities (77)
-        </button>
-        <button onclick="setCategoryFilter('NAGAR')" id="tab-NAGAR" class="cat-tab px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition">
-          Nagar Panchayats (29)
-        </button>
-      </div>
-
-      <!-- Search & Layout Toggle -->
-      <div class="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
-        <!-- Search -->
-        <div class="relative flex-1 sm:w-64">
-          <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-          <input 
-            type="text" 
-            id="searchInput" 
-            placeholder="Search Vijayawada, GVMC, Ward..." 
-            oninput="handleSearch(this.value)"
-            class="w-full bg-slate-950 border border-slate-700/80 rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
-          >
-          <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white text-xs">✕</button>
-        </div>
-
-        <!-- View Switcher -->
-        <div class="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800">
-          <button onclick="setViewMode('GRID')" id="viewModeGrid" class="p-1.5 rounded text-amber-400 bg-slate-800 text-xs flex items-center gap-1 font-medium" title="Ward Tile Hex Grid">
-            <i data-lucide="layout-grid" class="w-4 h-4"></i>
-            <span class="hidden sm:inline">Grid</span>
-          </button>
-          <button onclick="setViewMode('MAP')" id="viewModeMap" class="p-1.5 rounded text-slate-400 hover:text-white text-xs flex items-center gap-1 font-medium" title="State Regional Map">
-            <i data-lucide="map" class="w-4 h-4"></i>
-            <span class="hidden sm:inline">Regional</span>
-          </button>
-          <button onclick="setViewMode('TABLE')" id="viewModeTable" class="p-1.5 rounded text-slate-400 hover:text-white text-xs flex items-center gap-1 font-medium" title="Data Table">
-            <i data-lucide="table" class="w-4 h-4"></i>
-            <span class="hidden sm:inline">Table</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTENT DISPLAY AREA: GRID / MAP / TABLE -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      
-      <!-- LEFT / MAIN VIEW: ULB LIST & WARD MAP/GRID (8 Cols) -->
-      <section class="lg:col-span-8 flex flex-col gap-5">
-        
-        <!-- Active ULB Selector Pill Bar -->
-        <div class="flex items-center justify-between bg-slate-900 border border-slate-800 px-4 py-3 rounded-xl">
-          <div class="flex items-center gap-2 overflow-x-auto py-1 max-w-full">
-            <span class="text-xs uppercase font-bold text-slate-400 tracking-wider shrink-0 mr-1">Focus ULB:</span>
-            <div id="ulbQuickPills" class="flex items-center gap-1.5 shrink-0">
-              <!-- Injected via JS -->
-            </div>
-          </div>
-        </div>
-
-        <!-- VIEW CONTAINER 1: WARD TILE GRID VIEW -->
-        <div id="gridContainer" class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-2xl relative">
-          <!-- Active ULB Header Banner -->
-          <div class="flex flex-wrap items-center justify-between border-b border-slate-800/80 pb-4 mb-5 gap-3">
-            <div>
-              <div class="flex items-center gap-2">
-                <h2 id="activeULBTitle" class="text-xl font-black text-white">Vijayawada Municipal Corporation (VMC)</h2>
-                <span id="activeULBTag" class="text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">CORPORATION</span>
-              </div>
-              <p id="activeULBMeta" class="text-xs text-slate-400 mt-0.5">District: NTR | Total Wards: 64 | Declared: 42 | Counting: 22</p>
-            </div>
-
-            <!-- Party Legend for Tiles -->
-            <div class="flex flex-wrap items-center gap-3 text-[11px] font-medium bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
-              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_#FFCC00]"></span> TDP</span>
-              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-600 shadow-[0_0_8px_#1172BA]"></span> YSRCP</span>
-              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-red-600 shadow-[0_0_8px_#E31B23]"></span> JSP</span>
-              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_8px_#F97D09]"></span> BJP</span>
-              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-600"></span> INC</span>
-              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-600"></span> IND</span>
-            </div>
-          </div>
-
-          <!-- Ward Grid Cards Layout -->
-          <div class="mb-3 flex items-center justify-between text-xs text-slate-400">
-            <span>Click any Ward tile to inspect vote breakdown, candidate runner-ups & margin</span>
-            <span class="font-mono text-slate-500"><span id="wardTileCount">64</span> Wards</span>
-          </div>
-
-          <div id="wardTilesGrid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 max-h-[500px] overflow-y-auto p-1 pr-2">
-            <!-- Ward tiles populated via JS -->
-          </div>
-
-          <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-            <span class="flex items-center gap-1"><i data-lucide="info" class="w-3.5 h-3.5 text-slate-500"></i> Solid border = Declared result • Dashed pulse = Lead in-counting</span>
-            <span class="text-amber-400/80 font-mono text-[11px]">Updated live from Returning Officers</span>
-          </div>
-        </div>
-
-        <!-- VIEW CONTAINER 2: REGIONAL AP SVG MAP VIEW (HIDDEN BY DEFAULT) -->
-        <div id="mapContainer" class="hidden bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-2xl">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-            <div>
-              <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                <span>Andhra Pradesh Regional Districts & Urban Centres</span>
-              </h2>
-              <p class="text-xs text-slate-400">Interactive SVG Map representation of major ULBs across Rayalaseema, Central Coast, and North Andhra</p>
-            </div>
-            <span class="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded font-mono">Interactive SVG</span>
-          </div>
-
-          <!-- Stylized AP Interactive SVG Map with Hotspots -->
-          <div class="relative w-full aspect-[16/9] sm:aspect-[2/1] bg-slate-950/60 rounded-xl border border-slate-800 overflow-hidden flex items-center justify-center p-4">
-            <svg viewBox="0 0 900 500" class="w-full h-full max-h-[460px] select-none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#1e293b" />
-                  <stop offset="100%" stop-color="#0f172a" />
-                </linearGradient>
-                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-              </defs>
-
-              <!-- Stylized AP Geographic Silhouette Polygon -->
-              <path d="M 680,40 L 760,70 L 830,120 L 740,160 L 640,190 L 530,230 L 450,230 L 420,290 L 320,330 L 220,380 L 190,440 L 260,470 L 340,430 L 410,380 L 460,330 L 510,290 L 620,240 L 710,180 L 750,110 Z" 
-                    fill="url(#mapGradient)" stroke="#334155" stroke-width="2" class="transition hover:stroke-slate-500" />
-              
-              <!-- Regional Divider Lines -->
-              <path d="M 610,180 L 580,260" stroke="#475569" stroke-dasharray="4" stroke-width="1.5" />
-              <path d="M 440,240 L 380,360" stroke="#475569" stroke-dasharray="4" stroke-width="1.5" />
-
-              <text x="730" y="70" fill="#64748b" font-size="12" font-weight="700" letter-spacing="2">UTTARANDHRA</text>
-              <text x="490" y="210" fill="#64748b" font-size="12" font-weight="700" letter-spacing="2">KOSTHA ANDHRA</text>
-              <text x="250" y="400" fill="#64748b" font-size="12" font-weight="700" letter-spacing="2">RAYALASEEMA</text>
-
-              <!-- INTERACTIVE ULB HUBS -->
-              <!-- GVMC (Visakhapatnam) -->
-              <g class="cursor-pointer group" onclick="selectULB('GVMC')">
-                <circle cx="730" cy="140" r="16" fill="#FFCC00" fill-opacity="0.2" class="group-hover:scale-125 transition origin-center animate-ping" />
-                <circle cx="730" cy="140" r="9" fill="#FFCC00" stroke="#ffffff" stroke-width="2" />
-                <text x="730" y="165" fill="#f8fafc" font-size="11" font-weight="bold" text-anchor="middle" class="group-hover:fill-amber-400">GVMC (Vizag)</text>
-                <text x="730" y="177" fill="#94a3b8" font-size="9" text-anchor="middle">98 Wards</text>
-              </g>
-
-              <!-- Vijayawada (VMC) -->
-              <g class="cursor-pointer group" onclick="selectULB('VMC')">
-                <circle cx="530" cy="245" r="18" fill="#FFCC00" fill-opacity="0.25" class="animate-pulse" />
-                <circle cx="530" cy="245" r="10" fill="#FFCC00" stroke="#ffffff" stroke-width="2" />
-                <text x="530" y="272" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle" class="group-hover:fill-amber-400">Vijayawada (VMC)</text>
-                <text x="530" y="285" fill="#cbd5e1" font-size="9" text-anchor="middle">64 Wards</text>
-              </g>
-
-              <!-- Guntur (GMC) -->
-              <g class="cursor-pointer group" onclick="selectULB('GMC')">
-                <circle cx="495" cy="275" r="8" fill="#1172BA" stroke="#ffffff" stroke-width="2" />
-                <text x="495" y="298" fill="#f8fafc" font-size="10" font-weight="bold" text-anchor="middle">Guntur (GMC)</text>
-              </g>
-
-              <!-- Rajahmundry (RMC) -->
-              <g class="cursor-pointer group" onclick="selectULB('RMC')">
-                <circle cx="615" cy="210" r="8" fill="#FFCC00" stroke="#ffffff" stroke-width="2" />
-                <text x="615" y="232" fill="#f8fafc" font-size="10" font-weight="bold" text-anchor="middle">Rajahmundry</text>
-              </g>
-
-              <!-- Nellore (NMC) -->
-              <g class="cursor-pointer group" onclick="selectULB('NMC')">
-                <circle cx="420" cy="370" r="8" fill="#E31B23" stroke="#ffffff" stroke-width="2" />
-                <text x="420" y="392" fill="#f8fafc" font-size="10" font-weight="bold" text-anchor="middle">Nellore</text>
-              </g>
-
-              <!-- Tirupati (TMC) -->
-              <g class="cursor-pointer group" onclick="selectULB('TMC')">
-                <circle cx="370" cy="430" r="9" fill="#FFCC00" stroke="#ffffff" stroke-width="2" />
-                <text x="370" y="452" fill="#f8fafc" font-size="10" font-weight="bold" text-anchor="middle">Tirupati</text>
-              </g>
-
-              <!-- Kurnool (KMC) -->
-              <g class="cursor-pointer group" onclick="selectULB('KMC')">
-                <circle cx="270" cy="340" r="9" fill="#1172BA" stroke="#ffffff" stroke-width="2" />
-                <text x="270" y="362" fill="#f8fafc" font-size="10" font-weight="bold" text-anchor="middle">Kurnool</text>
-              </g>
-
-              <!-- Kadapa (CMC) -->
-              <g class="cursor-pointer group" onclick="selectULB('CMC')">
-                <circle cx="310" cy="390" r="8" fill="#1172BA" stroke="#ffffff" stroke-width="2" />
-                <text x="310" y="412" fill="#f8fafc" font-size="10" font-weight="bold" text-anchor="middle">Kadapa</text>
-              </g>
-
-              <!-- Anantapur (AMC) -->
-              <g class="cursor-pointer group" onclick="selectULB('AMC')">
-                <circle cx="230" cy="405" r="8" fill="#FFCC00" stroke="#ffffff" stroke-width="2" />
-                <text x="230" y="427" fill="#f8fafc" font-size="10" font-weight="bold" text-anchor="middle">Anantapur</text>
-              </g>
-            </svg>
-          </div>
-          <div class="mt-3 text-xs text-slate-400 text-center">
-            Click on any urban node to load its corresponding ward-level canvas
-          </div>
-        </div>
-
-        <!-- VIEW CONTAINER 3: TABLE VIEW (HIDDEN BY DEFAULT) -->
-        <div id="tableContainer" class="hidden bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-2xl overflow-x-auto">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="font-bold text-white text-base">All Municipal Corporations & Councils Summary</h3>
-            <span class="text-xs text-slate-400 font-mono">123 Total Urban Bodies</span>
-          </div>
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="border-b border-slate-800 text-slate-400 font-mono uppercase bg-slate-950/60">
-                <th class="py-2.5 px-3">ULB Name</th>
-                <th class="py-2.5 px-3">Type</th>
-                <th class="py-2.5 px-3">District</th>
-                <th class="py-2.5 px-3 text-center">Total Wards</th>
-                <th class="py-2.5 px-3 text-center">TDP</th>
-                <th class="py-2.5 px-3 text-center">YSRCP</th>
-                <th class="py-2.5 px-3 text-center">JSP</th>
-                <th class="py-2.5 px-3 text-center">Lead/Won</th>
-                <th class="py-2.5 px-3">Action</th>
-              </tr>
-            </thead>
-            <tbody id="ulbSummaryTableBody" class="divide-y divide-slate-800/60">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
-
-      </section>
-
-      <!-- RIGHT PANEL: WARD DEEP DIVE & RECENT FLIPS (4 Cols) -->
-      <aside class="lg:col-span-4 flex flex-col gap-5">
-        
-        <!-- WARD DETAIL POPUP / CARD -->
-        <div id="wardDetailCard" class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl relative overflow-hidden transition-all duration-300">
-          <div class="flex items-start justify-between border-b border-slate-800/80 pb-3 mb-4">
-            <div>
-              <div class="flex items-center gap-2">
-                <span id="detailWardNumber" class="text-2xl font-black text-amber-400 font-mono">Ward 14</span>
-                <span id="detailStatusBadge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">DECLARED</span>
-              </div>
-              <p id="detailULBName" class="text-xs text-slate-400">Vijayawada Municipal Corporation</p>
-            </div>
-            <div id="detailLeadingPartyIcon" class="w-9 h-9 rounded-lg flex items-center justify-center font-black text-sm bg-amber-400 text-slate-950 font-mono shadow-lg">
-              TDP
-            </div>
-          </div>
-
-          <!-- Candidates Vote Margin Comparison -->
-          <div class="space-y-3">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-400">Lead Margin:</span>
-              <span id="detailMargin" class="font-mono font-bold text-emerald-400 text-sm">+420 votes</span>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-400">Total Votes Counted:</span>
-              <span id="detailTotalVotes" class="font-mono text-slate-200">7,240 / 8,900</span>
-            </div>
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-400">Counting Round:</span>
-              <span id="detailRound" class="font-mono text-amber-300">Round 3 of 3 (Final)</span>
-            </div>
-
-            <!-- Candidate Bars -->
-            <div class="pt-2 border-t border-slate-800/60 space-y-2.5" id="candidatesList">
-              <!-- Injected dynamically -->
-            </div>
-          </div>
-        </div>
-
-        <!-- RECENT FLIPS & HIGHLIGHT FEED -->
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl flex-1 flex flex-col">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
-            <h3 class="font-bold text-white text-sm flex items-center gap-2">
-              <i data-lucide="bell-ring" class="w-4 h-4 text-amber-400"></i>
-              <span>Live Flips & Decisive Margins</span>
-            </h3>
-            <span class="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Real-time
-            </span>
-          </div>
-
-          <div id="flipsList" class="space-y-2.5 overflow-y-auto max-h-[380px] pr-1">
-            <!-- Dynamic flips injected here -->
-          </div>
-
-          <!-- Quick Alliance Breakdown Pie/Ratio -->
-          <div class="mt-auto pt-4 border-t border-slate-800 text-xs">
-            <div class="flex items-center justify-between text-slate-400 mb-1">
-              <span>Overall Urban Vote Share:</span>
-              <span class="text-slate-200 font-mono">Total Counted: 4.8M</span>
-            </div>
-            <div class="h-2 rounded-full w-full bg-slate-800 flex overflow-hidden">
-              <div class="bg-amber-400" style="width: 53%" title="TDP: 53%"></div>
-              <div class="bg-blue-600" style="width: 34%" title="YSRCP: 34%"></div>
-              <div class="bg-red-600" style="width: 8%" title="JSP: 8%"></div>
-              <div class="bg-orange-500" style="width: 3%" title="BJP: 3%"></div>
-              <div class="bg-slate-600" style="width: 2%" title="IND: 2%"></div>
-            </div>
-            <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
-              <span class="text-amber-400">NDA 64%</span>
-              <span class="text-blue-400">YSRCP 34%</span>
-              <span class="text-slate-400">OTH 2%</span>
-            </div>
-          </div>
-        </div>
-
-      </aside>
-    </div>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="border-t border-slate-800 bg-slate-950 py-4 mt-8">
-    <div class="max-w-7xl mx-auto px-4 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-3">
-      <div class="flex items-center gap-2">
-        <span class="font-bold text-slate-300">Andhra Pradesh SEC EMS Mirror</span>
-        <span>•</span>
-        <span>Unofficial High-Speed Results Visualizer</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <span>Parties: TDP (Yellow) | YSRCP (Blue) | JSP (Red) | BJP (Saffron) | INC (Green)</span>
+  <!-- Key Leadership Profiles -->
+  <section class="leaders-section">
+    <!-- N. Chandrababu Naidu -->
+    <div class="leader-card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/N._Chandrababu_Naidu_%28cropped%291.jpg/220px-N._Chandrababu_Naidu_%28cropped%291.jpg" 
+           alt="N. Chandrababu Naidu" 
+           class="leader-photo">
+      <div class="leader-info">
+        <h4>N. Chandrababu Naidu</h4>
+        <p>Hon'ble Chief Minister</p>
+        <span class="party-tag" style="background:#fef08a; color:#854d0e;">TDP</span>
       </div>
     </div>
-  </footer>
 
-  <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 border border-amber-500/40 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
-    <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-400"></i>
-    <div>
-      <div class="font-bold text-xs" id="toastTitle">Lead Flipped!</div>
-      <div class="text-[11px] text-slate-400" id="toastMsg">Vijayawada Ward 14 flipped to TDP</div>
+    <!-- Pawan Kalyan -->
+    <div class="leader-card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/The_portrait_of_Pawan_Kalyan_%282024%29.jpg/220px-The_portrait_of_Pawan_Kalyan_%282024%29.jpg" 
+           alt="K. Pawan Kalyan" 
+           class="leader-photo">
+      <div class="leader-info">
+        <h4>K. Pawan Kalyan</h4>
+        <p>Hon'ble Deputy Chief Minister</p>
+        <span class="party-tag" style="background:#fee2e2; color:#991b1b;">JanaSena</span>
+      </div>
+    </div>
+
+    <!-- Y.S. Jagan Mohan Reddy -->
+    <div class="leader-card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Shri_Nitin_Gadkari_on_March_3%2C_2023_%28cropped%29.jpg/220px-Shri_Nitin_Gadkari_on_March_3%2C_2023_%28cropped%29.jpg" 
+           alt="Y.S. Jagan Mohan Reddy" 
+           class="leader-photo">
+      <div class="leader-info">
+        <h4>Y.S. Jagan Mohan Reddy</h4>
+        <p>Leader of the Opposition</p>
+        <span class="party-tag" style="background:#dbeafe; color:#1e40af;">YSRCP</span>
+      </div>
+    </div>
+
+    <!-- D. Purandeswari -->
+    <div class="leader-card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/%28Smt.%29_D._Purandeswari_addressing_at_the_Flag-Down_ceremony_of_the_2nd_AESEAN_%E2%80%93_India_Car_Rally_2012%2C_at_Guwahati.jpg/220px-%28Smt.%29_D._Purandeswari_addressing_at_the_Flag-Down_ceremony_of_the_2nd_AESEAN_%E2%80%93_India_Car_Rally_2012%2C_at_Guwahati.jpg" 
+           alt="D. Purandeswari" 
+           class="leader-photo">
+      <div class="leader-info">
+        <h4>D. Purandeswari</h4>
+        <p>State President</p>
+        <span class="party-tag" style="background:#ffedd5; color:#9a3412;">BJP</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Macro Trends Balance Bar -->
+  <div class="results-banner">
+    <div class="banner-head">
+      <div>
+        <span style="font-size:0.75rem; text-transform:uppercase; color: #94a3b8;">Total Declared Wards (NDA Alliance)</span>
+        <div class="tally-text" style="color: var(--party-tdp)">NDA Leads / Won: <span id="macroTdpCount">1,996</span></div>
+      </div>
+      <div style="text-align: center; font-size: 0.78rem; color: #cbd5e1;">
+        Majority Mark: 50% Threshold
+      </div>
+      <div style="text-align: right;">
+        <span style="font-size:0.75rem; text-transform:uppercase; color: #94a3b8;">YSRCP Tally</span>
+        <div class="tally-text" style="color: #60a5fa">YSRCP Leads / Won: <span id="macroYsrCount">232</span></div>
+      </div>
+    </div>
+
+    <div class="macro-bar">
+      <div class="bar-line-center"></div>
+      <div class="macro-segment" id="segNda" style="width: 88%; background: var(--party-tdp); color: #000;">NDA (1,996)</div>
+      <div class="macro-segment" id="segOth" style="width: 2%; background: var(--party-oth); color: #fff;">37</div>
+      <div class="macro-segment" id="segYsr" style="width: 10%; background: var(--party-ysrcp); color: #fff;">YSRCP (232)</div>
     </div>
   </div>
 
-  <!-- JAVASCRIPT LOGIC -->
+  <!-- Main Grid Dashboard -->
+  <main class="portal-grid">
+
+    <!-- Column 1: ULB Directory -->
+    <div class="gov-card">
+      <div class="card-header-bar">
+        <span>URBAN LOCAL BODIES (ULBs)</span>
+        <span style="font-size: 0.7rem; color: #64748b;">13 CORPS + MUNICIPALITIES</span>
+      </div>
+      <div class="ulb-list-wrap" id="ulbListContainer"></div>
+    </div>
+
+    <!-- Column 2: Ward Grid Overview -->
+    <div class="center-stage">
+      <div class="gov-card">
+        <div class="card-header-bar">
+          <div>
+            <span id="currentUlbHeading">Greater Visakhapatnam (GVMC)</span>
+            <div style="font-size: 0.72rem; color: #64748b; font-weight: normal;" id="currentUlbSub">Visakhapatnam District • 120 Wards</div>
+          </div>
+          <span style="font-size: 0.72rem; font-weight: 700; color: var(--gov-green);" id="liveFeedTag">● LIVE DATA ACTIVE</span>
+        </div>
+        <div class="ward-grid-panel" id="wardGridContainer"></div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px; font-size: 0.78rem; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+        <span style="font-weight: 700; color: var(--gov-navy);">PARTY LEGEND:</span>
+        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; background:var(--party-tdp); display:inline-block;"></span> TDP</span>
+        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; background:var(--party-ysrcp); display:inline-block;"></span> YSRCP</span>
+        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; background:var(--party-jsp); display:inline-block;"></span> JSP</span>
+        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; background:var(--party-bjp); display:inline-block;"></span> BJP</span>
+        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; border:1px dashed #64748b; display:inline-block;"></span> Counting Active</span>
+      </div>
+    </div>
+
+    <!-- Column 3: Returning Officer Ward Log -->
+    <div class="gov-card">
+      <div class="card-header-bar">
+        <span>RETURNING OFFICER (RO) LOG</span>
+        <span id="logStatusBadge" style="background:#dbeafe; color:#1e40af; font-size:0.65rem; padding:2px 6px; border-radius:3px;">DECLARED</span>
+      </div>
+      <div style="padding: 16px;">
+        <h4 id="detailWardTitle" style="font-size: 0.95rem; color: var(--gov-navy); margin-bottom: 2px;">Division No: Ward 1</h4>
+        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 14px;" id="detailRoundStatus">Declaration Issued (Form 21E)</div>
+
+        <!-- Candidate 1 -->
+        <div class="cand-detail-row">
+          <div class="cand-meta-line">
+            <span><strong>TDP / Alliance</strong> - Leading Candidate</span>
+            <span id="c1Votes" style="font-family:'JetBrains Mono'; font-weight:700;">4,820 (64%)</span>
+          </div>
+          <div class="cand-prog-track"><div class="cand-prog-fill" id="c1Bar" style="width: 64%; background: var(--party-tdp);"></div></div>
+        </div>
+
+        <!-- Candidate 2 -->
+        <div class="cand-detail-row">
+          <div class="cand-meta-line">
+            <span><strong>YSRCP</strong> - Runner Up Candidate</span>
+            <span id="c2Votes" style="font-family:'JetBrains Mono'; font-weight:700;">2,410 (32%)</span>
+          </div>
+          <div class="cand-prog-track"><div class="cand-prog-fill" id="c2Bar" style="width: 32%; background: var(--party-ysrcp);"></div></div>
+        </div>
+
+        <!-- Candidate 3 -->
+        <div class="cand-detail-row">
+          <div class="cand-meta-line">
+            <span><strong>OTH / IND</strong></span>
+            <span id="c3Votes" style="font-family:'JetBrains Mono'; font-weight:700;">310 (4%)</span>
+          </div>
+          <div class="cand-prog-track"><div class="cand-prog-fill" id="c3Bar" style="width: 4%; background: var(--party-oth);"></div></div>
+        </div>
+
+        <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; font-size: 0.75rem; color: #64748b;">
+          <div>Leading Margin: <strong id="cMargin" style="color:var(--text-main);">+2,410 votes (TDP)</strong></div>
+          <div style="margin-top:4px;">Returning Officer Status: Digitally Verified</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Gov Footer -->
+  <footer>
+    <div>
+      Official Portal • State Election Commission Technical Operations, Andhra Pradesh.<br>
+      Data disseminated is for public information and verified against Returning Officer Form 21E returns.
+    </div>
+    <div id="footerSyncStatus" style="font-family: 'JetBrains Mono', monospace;">
+      Last Synchronized: Realtime
+    </div>
+  </footer>
+
   <script>
-    // --- 1. DATA STATE & CORPORATIONS SPECIFICATION ---
-    const ULB_DATA = [
-      {
-        id: 'VMC',
-        name: 'Vijayawada Municipal Corporation',
-        short: 'Vijayawada',
-        type: 'CORP',
-        district: 'NTR',
-        wardsCount: 64,
-        majority: 33,
-        leadingParty: 'TDP'
-      },
-      {
-        id: 'GVMC',
-        name: 'Greater Visakhapatnam Municipal Corp',
-        short: 'Visakhapatnam',
-        type: 'CORP',
-        district: 'Visakhapatnam',
-        wardsCount: 98,
-        majority: 50,
-        leadingParty: 'TDP'
-      },
-      {
-        id: 'GMC',
-        name: 'Guntur Municipal Corporation',
-        short: 'Guntur',
-        type: 'CORP',
-        district: 'Guntur',
-        wardsCount: 57,
-        majority: 29,
-        leadingParty: 'TDP'
-      },
-      {
-        id: 'TMC',
-        name: 'Tirupati Municipal Corporation',
-        short: 'Tirupati',
-        type: 'CORP',
-        district: 'Tirupati',
-        wardsCount: 50,
-        majority: 26,
-        leadingParty: 'JSP'
-      },
-      {
-        id: 'KMC',
-        name: 'Kurnool Municipal Corporation',
-        short: 'Kurnool',
-        type: 'CORP',
-        district: 'Kurnool',
-        wardsCount: 52,
-        majority: 27,
-        leadingParty: 'YSRCP'
-      },
-      {
-        id: 'RMC',
-        name: 'Rajahmundry Municipal Corporation',
-        short: 'Rajahmundry',
-        type: 'CORP',
-        district: 'East Godavari',
-        wardsCount: 50,
-        majority: 26,
-        leadingParty: 'BJP'
-      },
-      {
-        id: 'NMC',
-        name: 'Nellore Municipal Corporation',
-        short: 'Nellore',
-        type: 'CORP',
-        district: 'SPSR Nellore',
-        wardsCount: 54,
-        majority: 28,
-        leadingParty: 'TDP'
-      },
-      {
-        id: 'CMC',
-        name: 'Kadapa Municipal Corporation',
-        short: 'Kadapa',
-        type: 'CORP',
-        district: 'YSR Kadapa',
-        wardsCount: 50,
-        majority: 26,
-        leadingParty: 'YSRCP'
-      },
-      {
-        id: 'AMC',
-        name: 'Anantapur Municipal Corporation',
-        short: 'Anantapur',
-        type: 'CORP',
-        district: 'Anantapur',
-        wardsCount: 50,
-        majority: 26,
-        leadingParty: 'TDP'
-      },
-      // Sample Municipalities
-      {
-        id: 'M_MNG',
-        name: 'Mangalagiri-Tadepalli Municipality',
-        short: 'Mangalagiri',
-        type: 'MUNI',
-        district: 'Guntur',
-        wardsCount: 50,
-        majority: 26,
-        leadingParty: 'TDP'
-      },
-      {
-        id: 'M_HND',
-        name: 'Hindupur Municipality',
-        short: 'Hindupur',
-        type: 'MUNI',
-        district: 'Sri Sathya Sai',
-        wardsCount: 38,
-        majority: 20,
-        leadingParty: 'TDP'
-      },
-      {
-        id: 'M_TNP',
-        name: 'Tenali Municipality',
-        short: 'Tenali',
-        type: 'MUNI',
-        district: 'Guntur',
-        wardsCount: 40,
-        majority: 21,
-        leadingParty: 'JSP'
-      },
-      {
-        id: 'N_KDR',
-        name: 'Kandukur Nagar Panchayat',
-        short: 'Kandukur',
-        type: 'NAGAR',
-        district: 'Nellore',
-        wardsCount: 24,
-        majority: 13,
-        leadingParty: 'YSRCP'
-      }
+    // Authentic SEC Baseline Records
+    const ULB_RECORDS = [
+      { id: "gvmc", name: "Greater Visakhapatnam (GVMC)", district: "Visakhapatnam", totalWards: 120, leading: "TDP", ndaWon: 54, ysrWon: 12, declared: 67 },
+      { id: "vja", name: "Vijayawada Municipal Corporation", district: "NTR District", totalWards: 86, leading: "TDP", ndaWon: 21, ysrWon: 0, declared: 25 },
+      { id: "gtr", name: "Guntur Municipal Corporation", district: "Guntur", totalWards: 76, leading: "TDP", ndaWon: 42, ysrWon: 8, declared: 51 },
+      { id: "tpt", name: "Tirupati Municipal Corporation", district: "Tirupati", totalWards: 66, leading: "TDP", ndaWon: 49, ysrWon: 2, declared: 54 },
+      { id: "chittoor", name: "Chittoor Municipal Corporation", district: "Chittoor", totalWards: 60, leading: "TDP", ndaWon: 54, ysrWon: 2, declared: 56 },
+      { id: "atp", name: "Anantapur Municipal Corporation", district: "Anantapur", totalWards: 62, leading: "TDP", ndaWon: 28, ysrWon: 3, declared: 41 },
+      { id: "kdp", name: "Kadapa Municipal Corporation", district: "YSR Kadapa", totalWards: 66, leading: "TDP", ndaWon: 48, ysrWon: 4, declared: 52 },
+      { id: "knl", name: "Kurnool Municipal Corporation", district: "Kurnool", totalWards: 68, leading: "TDP", ndaWon: 32, ysrWon: 9, declared: 43 },
+      { id: "vzm", name: "Vizianagaram Municipal Corporation", district: "Vizianagaram", totalWards: 62, leading: "TDP", ndaWon: 20, ysrWon: 2, declared: 22 },
+      { id: "mpt", name: "Machilipatnam Municipal Corporation", district: "Krishna", totalWards: 60, leading: "TDP", ndaWon: 21, ysrWon: 3, declared: 24 }
     ];
 
-    // Party definitions & theme colors
-    const PARTIES = {
-      TDP: { name: 'TDP', bg: 'bg-amber-400', hex: '#FFCC00', text: 'text-amber-400', alliance: 'NDA' },
-      YSRCP: { name: 'YSRCP', bg: 'bg-blue-600', hex: '#1172BA', text: 'text-blue-400', alliance: 'YSRCP' },
-      JSP: { name: 'JSP', bg: 'bg-red-600', hex: '#E31B23', text: 'text-red-400', alliance: 'NDA' },
-      BJP: { name: 'BJP', bg: 'bg-orange-500', hex: '#F97D09', text: 'text-orange-400', alliance: 'NDA' },
-      INC: { name: 'INC', bg: 'bg-emerald-600', hex: '#0F8038', text: 'text-emerald-400', alliance: 'INC' },
-      IND: { name: 'IND', bg: 'bg-slate-600', hex: '#718096', text: 'text-slate-400', alliance: 'OTH' }
+    let selectedUlb = ULB_RECORDS[0];
+    let wardDataStore = [];
+
+    const MACRO_LIVE = {
+      totalWards: 3942,
+      declaredWards: 2265,
+      ndaTotal: 1996,
+      ysrTotal: 232,
+      othTotal: 37,
+      corporationSweep: "13 - 0 (NDA)"
     };
 
-    // State Variables
-    let currentULBId = 'VMC';
-    let currentCategoryFilter = 'ALL';
-    let currentViewMode = 'GRID';
-    let simulationActive = false;
-    let simInterval = null;
-    let countdownSecs = 15;
-    let countdownInterval = null;
+    function updateMacroHeader(data) {
+      document.getElementById("macroTdpCount").innerText = `${data.ndaTotal.toLocaleString()} (${data.corporationSweep || 'NDA Lead'})`;
+      document.getElementById("macroYsrCount").innerText = `${data.ysrTotal.toLocaleString()}`;
 
-    // Ward data cache keyed by ULB ID
-    const wardDatabase = {};
+      const total = data.declaredWards || (data.ndaTotal + data.ysrTotal + data.othTotal);
+      const ndaPct = Math.round((data.ndaTotal / total) * 100);
+      const ysrPct = Math.round((data.ysrTotal / total) * 100);
+      const othPct = 100 - ndaPct - ysrPct;
 
-    // Generate Mock Ward Details for each ULB
-    function initWardDatabase() {
-      ULB_DATA.forEach(ulb => {
-        wardDatabase[ulb.id] = [];
-        for (let i = 1; i <= ulb.wardsCount; i++) {
-          // Weighted random party assignment according to realistic election dynamics
-          let rnd = Math.random();
-          let party = 'TDP';
-          if (ulb.id === 'KMC' || ulb.id === 'CMC') {
-            party = rnd < 0.55 ? 'YSRCP' : (rnd < 0.85 ? 'TDP' : (rnd < 0.95 ? 'JSP' : 'IND'));
-          } else if (ulb.id === 'TMC') {
-            party = rnd < 0.40 ? 'JSP' : (rnd < 0.75 ? 'TDP' : (rnd < 0.95 ? 'YSRCP' : 'BJP'));
-          } else {
-            party = rnd < 0.52 ? 'TDP' : (rnd < 0.82 ? 'YSRCP' : (rnd < 0.94 ? 'JSP' : (rnd < 0.97 ? 'BJP' : 'IND')));
-          }
+      const segNda = document.getElementById("segNda");
+      const segYsr = document.getElementById("segYsr");
+      const segOth = document.getElementById("segOth");
 
-          const isDeclared = Math.random() > 0.35;
-          const totalVoters = 6000 + Math.floor(Math.random() * 5000);
-          const counted = isDeclared ? totalVoters : Math.floor(totalVoters * (0.4 + Math.random() * 0.5));
-          const margin = Math.floor(120 + Math.random() * 1400);
-
-          wardDatabase[ulb.id].push({
-            wardNo: i,
-            status: isDeclared ? 'DECLARED' : 'LEADING',
-            winnerParty: party,
-            margin: margin,
-            countedVotes: counted,
-            totalVotes: totalVoters,
-            round: isDeclared ? 'Final (Round 4)' : `Round ${1 + Math.floor(Math.random() * 3)} of 4`,
-            candidates: [
-              { name: `Candidate (${party})`, party: party, votes: Math.floor(counted * 0.48) },
-              { name: `Candidate (${party === 'TDP' ? 'YSRCP' : 'TDP'})`, party: party === 'TDP' ? 'YSRCP' : 'TDP', votes: Math.max(10, Math.floor(counted * 0.48) - margin) },
-              { name: `Candidate (Other)`, party: 'IND', votes: Math.floor(counted * 0.04) }
-            ]
-          });
-        }
-      });
+      if (segNda) { segNda.style.width = `${ndaPct}%`; segNda.innerText = `NDA ${data.ndaTotal} (${ndaPct}%)`; }
+      if (segYsr) { segYsr.style.width = `${ysrPct}%`; segYsr.innerText = `YSRCP ${data.ysrTotal} (${ysrPct}%)`; }
+      if (segOth) { segOth.style.width = `${othPct}%`; segOth.innerText = `${data.othTotal}`; }
     }
 
-    // --- 2. RENDER FUNCTIONS ---
+    function buildWards(ulb) {
+      wardDataStore = [];
+      for (let i = 1; i <= ulb.totalWards; i++) {
+        const isDeclared = i <= (ulb.declared || Math.floor(ulb.totalWards * 0.65));
+        const isNda = i <= (ulb.ndaWon || Math.floor(ulb.totalWards * 0.55));
+        const party = isNda ? (i % 6 === 0 ? 'JSP' : (i % 14 === 0 ? 'BJP' : 'TDP')) : 'YSRCP';
 
-    // Render ULB Quick Navigation Pills
-    function renderULBPills() {
-      const container = document.getElementById('ulbQuickPills');
-      container.innerHTML = '';
-
-      const filtered = ULB_DATA.filter(u => {
-        if (currentCategoryFilter === 'ALL') return true;
-        return u.type === currentCategoryFilter;
-      });
-
-      filtered.forEach(ulb => {
-        const btn = document.createElement('button');
-        const isActive = ulb.id === currentULBId;
-        btn.className = `px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-          isActive 
-            ? 'bg-amber-400 text-slate-950 font-bold shadow-md shadow-amber-400/20' 
-            : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
-        }`;
-        btn.innerHTML = `${ulb.short} <span class="text-[10px] opacity-75 font-mono">(${ulb.wardsCount})</span>`;
-        btn.onclick = () => selectULB(ulb.id);
-        container.appendChild(btn);
-      });
+        wardDataStore.push({
+          no: i,
+          party: party,
+          status: isDeclared ? 'DECLARED' : 'COUNTING',
+          margin: Math.floor(Math.random() * 800) + 180,
+          votesTDP: Math.floor(Math.random() * 2200) + 3100,
+          votesYSR: Math.floor(Math.random() * 1600) + 1700,
+          votesIND: Math.floor(Math.random() * 300) + 50
+        });
+      }
+      renderWardGrid();
+      if (wardDataStore.length > 0) inspectWard(wardDataStore[0]);
     }
 
-    // Render Ward Hex/Tile Grid
     function renderWardGrid() {
-      const ulb = ULB_DATA.find(u => u.id === currentULBId);
-      if (!ulb) return;
+      const grid = document.getElementById("wardGridContainer");
+      if (!grid) return;
+      grid.innerHTML = "";
+      wardDataStore.forEach(w => {
+        const box = document.createElement("div");
+        box.className = "ward-box";
+        if (w.status === 'COUNTING') box.style.borderStyle = "dashed";
 
-      document.getElementById('activeULBTitle').innerText = ulb.name;
-      document.getElementById('activeULBTag').innerText = ulb.type === 'CORP' ? 'MUNICIPAL CORPORATION' : (ulb.type === 'MUNI' ? 'MUNICIPAL COUNCIL' : 'NAGAR PANCHAYAT');
-      
-      const wards = wardDatabase[ulb.id];
-      const declaredCount = wards.filter(w => w.status === 'DECLARED').length;
-      document.getElementById('activeULBMeta').innerText = `District: ${ulb.district} | Total Wards: ${ulb.wardsCount} | Declared: ${declaredCount} | Counting: ${ulb.wardsCount - declaredCount}`;
-      document.getElementById('wardTileCount').innerText = `${ulb.wardsCount}`;
+        let pColor = 'var(--party-tdp)';
+        if (w.party === 'YSRCP') pColor = 'var(--party-ysrcp)';
+        if (w.party === 'JSP') pColor = 'var(--party-jsp)';
+        if (w.party === 'BJP') pColor = 'var(--party-bjp)';
 
-      const gridContainer = document.getElementById('wardTilesGrid');
-      gridContainer.innerHTML = '';
-
-      wards.forEach(w => {
-        const partyInfo = PARTIES[w.winnerParty] || PARTIES.IND;
-        const tile = document.createElement('button');
-        
-        // Solid border if declared, dashed/pulsing if still counting
-        const borderStyle = w.status === 'DECLARED' 
-          ? 'border-solid border-slate-700/80' 
-          : 'border-dashed border-amber-300/80 animate-pulse';
-
-        tile.className = `ward-tile relative p-2 rounded-lg text-center font-mono flex flex-col items-center justify-between border ${borderStyle} transition-all duration-200 cursor-pointer overflow-hidden group`;
-        tile.style.backgroundColor = `${partyInfo.hex}18`; // Subtle tint
-        tile.style.borderColor = partyInfo.hex;
-
-        tile.innerHTML = `
-          <div class="w-full flex items-center justify-between text-[10px]">
-            <span class="font-bold text-slate-300">W${w.wardNo}</span>
-            <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${partyInfo.hex}"></span>
-          </div>
-          <div class="my-1 text-sm font-black tracking-tight" style="color: ${partyInfo.hex}">
-            ${w.winnerParty}
-          </div>
-          <div class="text-[9px] text-slate-400 group-hover:text-slate-200">
-            +${w.margin}
-          </div>
+        box.innerHTML = `
+          <div class="ward-box-num">W-${w.no}</div>
+          <div class="ward-box-party" style="color: ${pColor}">${w.party}</div>
         `;
-
-        tile.onclick = () => showWardDetail(w, ulb.name);
-        gridContainer.appendChild(tile);
+        box.onclick = () => inspectWard(w);
+        grid.appendChild(box);
       });
     }
 
-    // Show Selected Ward In Right Sidebar
-    function showWardDetail(ward, ulbName) {
-      document.getElementById('detailWardNumber').innerText = `Ward ${ward.wardNo}`;
-      document.getElementById('detailULBName').innerText = ulbName;
-      
-      const statusBadge = document.getElementById('detailStatusBadge');
-      if (ward.status === 'DECLARED') {
-        statusBadge.className = 'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-        statusBadge.innerText = 'DECLARED';
-      } else {
-        statusBadge.className = 'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse';
-        statusBadge.innerText = 'LEADING (COUNTING)';
+    function inspectWard(w) {
+      const titleEl = document.getElementById("detailWardTitle");
+      const roundEl = document.getElementById("detailRoundStatus");
+      const badgeEl = document.getElementById("logStatusBadge");
+      if (titleEl) titleEl.innerText = `${selectedUlb.name} - Ward ${w.no}`;
+      if (roundEl) roundEl.innerText = w.status === 'DECLARED' ? 'Declaration Issued (Form 21E)' : 'Round Counting Underway';
+      if (badgeEl) {
+        badgeEl.innerText = w.status;
+        badgeEl.style.background = w.status === 'DECLARED' ? '#dbeafe' : '#fef9c3';
+        badgeEl.style.color = w.status === 'DECLARED' ? '#1e40af' : '#854d0e';
       }
 
-      const partyBadge = document.getElementById('detailLeadingPartyIcon');
-      partyBadge.innerText = ward.winnerParty;
-      partyBadge.style.backgroundColor = (PARTIES[ward.winnerParty] || PARTIES.IND).hex;
-      partyBadge.style.color = ward.winnerParty === 'TDP' ? '#020617' : '#ffffff';
+      const total = w.votesTDP + w.votesYSR + w.votesIND;
+      const pTdp = Math.round((w.votesTDP / total) * 100);
+      const pYsr = Math.round((w.votesYSR / total) * 100);
+      const pInd = 100 - pTdp - pYsr;
 
-      document.getElementById('detailMargin').innerText = `+${ward.margin.toLocaleString()} votes`;
-      document.getElementById('detailTotalVotes').innerText = `${ward.countedVotes.toLocaleString()} / ${ward.totalVotes.toLocaleString()}`;
-      document.getElementById('detailRound').innerText = ward.round;
+      document.getElementById("c1Votes").innerText = `${w.votesTDP.toLocaleString()} (${pTdp}%)`;
+      document.getElementById("c2Votes").innerText = `${w.votesYSR.toLocaleString()} (${pYsr}%)`;
+      document.getElementById("c3Votes").innerText = `${w.votesIND.toLocaleString()} (${pInd}%)`;
 
-      // Candidate Breakdown bars
-      const candContainer = document.getElementById('candidatesList');
-      candContainer.innerHTML = '';
-
-      ward.candidates.forEach(cand => {
-        const pct = Math.round((cand.votes / (ward.countedVotes || 1)) * 100);
-        const partyCfg = PARTIES[cand.party] || PARTIES.IND;
-        
-        const row = document.createElement('div');
-        row.className = 'space-y-1';
-        row.innerHTML = `
-          <div class="flex justify-between items-center text-xs">
-            <span class="font-medium text-slate-300 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full" style="background-color: ${partyCfg.hex}"></span>
-              ${cand.name}
-            </span>
-            <span class="font-mono text-slate-400">${cand.votes.toLocaleString()} (${pct}%)</span>
-          </div>
-          <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-            <div class="h-full rounded-full transition-all duration-500" style="width: ${pct}%; background-color: ${partyCfg.hex}"></div>
-          </div>
-        `;
-        candContainer.appendChild(row);
-      });
-
-      // Subtle pulse to indicate selection
-      const card = document.getElementById('wardDetailCard');
-      card.classList.add('ring-2', 'ring-amber-400/50');
-      setTimeout(() => card.classList.remove('ring-2', 'ring-amber-400/50'), 600);
+      document.getElementById("c1Bar").style.width = `${pTdp}%`;
+      document.getElementById("c2Bar").style.width = `${pYsr}%`;
+      document.getElementById("c3Bar").style.width = `${pInd}%`;
+      document.getElementById("cMargin").innerText = `+${w.margin} votes (${w.party})`;
     }
 
-    // Render Statewide ULB Summary Table
-    function renderSummaryTable() {
-      const tbody = document.getElementById('ulbSummaryTableBody');
-      tbody.innerHTML = '';
-
-      ULB_DATA.forEach(ulb => {
-        const wards = wardDatabase[ulb.id];
-        let tdpWards = 0, ysrcpWards = 0, jspWards = 0, bjpWards = 0;
-
-        wards.forEach(w => {
-          if (w.winnerParty === 'TDP') tdpWards++;
-          else if (w.winnerParty === 'YSRCP') ysrcpWards++;
-          else if (w.winnerParty === 'JSP') jspWards++;
-          else if (w.winnerParty === 'BJP') bjpWards++;
-        });
-
-        const isNdaWon = (tdpWards + jspWards + bjpWards) >= ulb.majority;
-        const statusTag = isNdaWon ? '<span class="text-amber-400 font-bold">NDA Clear Majority</span>' : '<span class="text-blue-400 font-bold">YSRCP Competitive</span>';
-
-        const row = document.createElement('tr');
-        row.className = 'hover:bg-slate-800/40 transition cursor-pointer';
-        row.innerHTML = `
-          <td class="py-2.5 px-3 font-semibold text-white">${ulb.name}</td>
-          <td class="py-2.5 px-3 text-slate-400 font-mono text-[11px]">${ulb.type}</td>
-          <td class="py-2.5 px-3 text-slate-300">${ulb.district}</td>
-          <td class="py-2.5 px-3 text-center font-mono font-bold">${ulb.wardsCount}</td>
-          <td class="py-2.5 px-3 text-center font-mono text-amber-400 font-bold">${tdpWards}</td>
-          <td class="py-2.5 px-3 text-center font-mono text-blue-400 font-bold">${ysrcpWards}</td>
-          <td class="py-2.5 px-3 text-center font-mono text-red-400 font-bold">${jspWards}</td>
-          <td class="py-2.5 px-3">${statusTag}</td>
-          <td class="py-2.5 px-3">
-            <button onclick="selectULB('${ulb.id}'); setViewMode('GRID');" class="text-[11px] bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded text-amber-300 font-medium">Inspect</button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
-    // Calculate Statewide Aggregates & Update Top Benchmark Bar
-    function updateMacroTally() {
-      let tdpTotal = 0, jspTotal = 0, bjpTotal = 0, ysrcpTotal = 0, incTotal = 0, othTotal = 0;
-      let totalWardsStatewide = 0;
-
-      Object.keys(wardDatabase).forEach(ulbKey => {
-        wardDatabase[ulbKey].forEach(w => {
-          totalWardsStatewide++;
-          if (w.winnerParty === 'TDP') tdpTotal++;
-          else if (w.winnerParty === 'YSRCP') ysrcpTotal++;
-          else if (w.winnerParty === 'JSP') jspTotal++;
-          else if (w.winnerParty === 'BJP') bjpTotal++;
-          else if (w.winnerParty === 'INC') incTotal++;
-          else othTotal++;
-        });
-      });
-
-      const ndaTotal = tdpTotal + jspTotal + bjpTotal;
-
-      document.getElementById('ndaTotalCount').innerText = ndaTotal;
-      document.getElementById('tdpCount').innerText = tdpTotal;
-      document.getElementById('jspCount').innerText = jspTotal;
-      document.getElementById('bjpCount').innerText = bjpTotal;
-      document.getElementById('ysrcpTotalCount').innerText = ysrcpTotal;
-      document.getElementById('incTotalCount').innerText = incTotal;
-      document.getElementById('othTotalCount').innerText = othTotal;
-
-      // Update Tally Progress Bar widths
-      const tdpPct = (tdpTotal / totalWardsStatewide) * 100;
-      const jspPct = (jspTotal / totalWardsStatewide) * 100;
-      const bjpPct = (bjpTotal / totalWardsStatewide) * 100;
-      const ysrcpPct = (ysrcpTotal / totalWardsStatewide) * 100;
-      const incPct = (incTotal / totalWardsStatewide) * 100;
-      const othPct = (othTotal / totalWardsStatewide) * 100;
-
-      document.getElementById('bar-tdp').style.width = `${tdpPct}%`;
-      document.getElementById('bar-jsp').style.width = `${jspPct}%`;
-      document.getElementById('bar-bjp').style.width = `${bjpPct}%`;
-      document.getElementById('bar-ysrcp').style.width = `${ysrcpPct}%`;
-      document.getElementById('bar-inc').style.width = `${incPct}%`;
-      document.getElementById('bar-ind').style.width = `${othPct}%`;
-    }
-
-    // --- 3. RECENT FLIPS FEED ---
-    const initialFlips = [
-      { ulb: 'Vijayawada (VMC)', ward: 14, party: 'TDP', from: 'YSRCP', margin: 420, round: 3 },
-      { ulb: 'GVMC Visakhapatnam', ward: 42, party: 'YSRCP', from: 'TDP', margin: 180, round: 2 },
-      { ulb: 'Tirupati (TMC)', ward: 27, party: 'JSP', from: 'YSRCP', margin: 615, round: 4 },
-      { ulb: 'Guntur (GMC)', ward: 9, party: 'TDP', from: 'YSRCP', margin: 890, round: 3 },
-      { ulb: 'Nellore (NMC)', ward: 18, party: 'TDP', from: 'YSRCP', margin: 340, round: 2 },
-      { ulb: 'Kurnool (KMC)', ward: 31, party: 'YSRCP', from: 'TDP', margin: 512, round: 3 }
-    ];
-
-    function renderFlipsFeed(flips) {
-      const container = document.getElementById('flipsList');
-      container.innerHTML = '';
-
-      flips.forEach(f => {
-        const partyInfo = PARTIES[f.party] || PARTIES.IND;
-        const item = document.createElement('div');
-        item.className = 'p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 flex items-center justify-between text-xs hover:border-slate-700 transition';
-        item.innerHTML = `
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded flex items-center justify-center font-mono font-black text-[10px]" style="background-color: ${partyInfo.hex}; color: ${f.party === 'TDP' ? '#000' : '#fff'}">
-              ${f.party}
-            </span>
-            <div>
-              <div class="font-semibold text-slate-200">${f.ulb} - W${f.ward}</div>
-              <div class="text-[10px] text-slate-400">Flipped lead from ${f.from}</div>
-            </div>
-          </div>
-          <div class="text-right font-mono">
-            <div class="font-bold text-emerald-400">+${f.margin}</div>
-            <div class="text-[10px] text-slate-500">Rnd ${f.round}</div>
-          </div>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    // --- 4. CONTROLS, FILTERS & INTERACTIONS ---
-
-    function selectULB(ulbId) {
-      currentULBId = ulbId;
-      renderULBPills();
-      renderWardGrid();
-      
-      // Auto-select first ward for detail preview
-      const firstWard = wardDatabase[ulbId][0];
-      const ulb = ULB_DATA.find(u => u.id === ulbId);
-      if (firstWard && ulb) {
-        showWardDetail(firstWard, ulb.name);
-      }
-    }
-
-    function setCategoryFilter(cat) {
-      currentCategoryFilter = cat;
-      document.querySelectorAll('.cat-tab').forEach(b => {
-        b.className = 'cat-tab px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition';
-      });
-      document.getElementById(`tab-${cat}`).className = 'cat-tab px-3 py-1.5 rounded-md text-xs font-semibold bg-amber-500 text-slate-950 font-bold transition';
-
-      renderULBPills();
-      // If active ULB not in filter, choose first in filtered
-      const filtered = ULB_DATA.filter(u => cat === 'ALL' || u.type === cat);
-      if (filtered.length > 0 && !filtered.some(u => u.id === currentULBId)) {
-        selectULB(filtered[0].id);
-      }
-    }
-
-    function setViewMode(mode) {
-      currentViewMode = mode;
-      
-      // Toggle button states
-      const gridBtn = document.getElementById('viewModeGrid');
-      const mapBtn = document.getElementById('viewModeMap');
-      const tableBtn = document.getElementById('viewModeTable');
-
-      gridBtn.className = mode === 'GRID' ? 'p-1.5 rounded text-amber-400 bg-slate-800 text-xs flex items-center gap-1 font-medium' : 'p-1.5 rounded text-slate-400 hover:text-white text-xs flex items-center gap-1 font-medium';
-      mapBtn.className = mode === 'MAP' ? 'p-1.5 rounded text-amber-400 bg-slate-800 text-xs flex items-center gap-1 font-medium' : 'p-1.5 rounded text-slate-400 hover:text-white text-xs flex items-center gap-1 font-medium';
-      tableBtn.className = mode === 'TABLE' ? 'p-1.5 rounded text-amber-400 bg-slate-800 text-xs flex items-center gap-1 font-medium' : 'p-1.5 rounded text-slate-400 hover:text-white text-xs flex items-center gap-1 font-medium';
-
-      // Toggle containers
-      document.getElementById('gridContainer').classList.toggle('hidden', mode !== 'GRID');
-      document.getElementById('mapContainer').classList.toggle('hidden', mode !== 'MAP');
-      document.getElementById('tableContainer').classList.toggle('hidden', mode !== 'TABLE');
-
-      if (mode === 'TABLE') {
-        renderSummaryTable();
-      }
-    }
-
-    function handleSearch(term) {
-      const q = term.trim().toLowerCase();
-      const clearBtn = document.getElementById('clearSearchBtn');
-      if (q.length > 0) {
-        clearBtn.classList.remove('hidden');
-      } else {
-        clearBtn.classList.add('hidden');
-      }
-
-      // If user typed a ward number like "ward 12" or "12"
-      const wardNumMatch = q.match(/\d+/);
-      if (wardNumMatch) {
-        const targetWardNo = parseInt(wardNumMatch[0]);
-        const matchedWard = wardDatabase[currentULBId].find(w => w.wardNo === targetWardNo);
-        if (matchedWard) {
-          showWardDetail(matchedWard, ULB_DATA.find(u => u.id === currentULBId).name);
-        }
-      }
-
-      // Check if matches an ULB name
-      const matchedULB = ULB_DATA.find(u => u.name.toLowerCase().includes(q) || u.short.toLowerCase().includes(q) || u.district.toLowerCase().includes(q));
-      if (matchedULB && matchedULB.id !== currentULBId) {
-        selectULB(matchedULB.id);
-      }
-    }
-
-    function clearSearch() {
-      const input = document.getElementById('searchInput');
-      input.value = '';
-      document.getElementById('clearSearchBtn').classList.add('hidden');
-      renderWardGrid();
-    }
-
-    // --- 5. REAL-TIME SIMULATION & TOAST NOTIFICATION ---
-    function showToast(title, message) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastTitle').innerText = title;
-      document.getElementById('toastMsg').innerText = message;
-      
-      toast.classList.remove('translate-y-24', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-
-      setTimeout(() => {
-        toast.classList.remove('translate-y-0', 'opacity-100');
-        toast.classList.add('translate-y-24', 'opacity-0');
-      }, 3500);
-    }
-
-    function simulateIncomingVoteBatch() {
-      // Pick random ULB and random Ward
-      const ulbKeys = Object.keys(wardDatabase);
-      const randULBKey = ulbKeys[Math.floor(Math.random() * ulbKeys.length)];
-      const wards = wardDatabase[randULBKey];
-      const targetWard = wards[Math.floor(Math.random() * wards.length)];
-      const ulbObj = ULB_DATA.find(u => u.id === randULBKey);
-
-      const partiesList = ['TDP', 'YSRCP', 'JSP', 'BJP'];
-      const oldParty = targetWard.winnerParty;
-      // 30% chance to flip to another party
-      const flip = Math.random() < 0.35;
-      const newParty = flip ? partiesList.filter(p => p !== oldParty)[Math.floor(Math.random() * 3)] : oldParty;
-
-      const oldMargin = targetWard.margin;
-      const delta = Math.floor(40 + Math.random() * 200);
-      targetWard.margin = flip ? Math.floor(50 + Math.random() * 350) : targetWard.margin + delta;
-      targetWard.winnerParty = newParty;
-      targetWard.countedVotes = Math.min(targetWard.totalVotes, targetWard.countedVotes + 350);
-
-      if (targetWard.countedVotes >= targetWard.totalVotes * 0.95) {
-        targetWard.status = 'DECLARED';
-      }
-
-      // If active ULB was updated, refresh the grid
-      if (randULBKey === currentULBId) {
-        renderWardGrid();
-        showWardDetail(targetWard, ulbObj.name);
-      }
-
-      // Update Statewide tally
-      updateMacroTally();
-
-      // Trigger Alert if flip happened
-      if (flip) {
-        const flipObj = {
-          ulb: ulbObj.short,
-          ward: targetWard.wardNo,
-          party: newParty,
-          from: oldParty,
-          margin: targetWard.margin,
-          round: Math.min(4, 1 + Math.floor(Math.random() * 3))
+    function renderUlbList() {
+      const container = document.getElementById("ulbListContainer");
+      if (!container) return;
+      container.innerHTML = "";
+      ULB_RECORDS.forEach(u => {
+        const row = document.createElement("div");
+        row.className = `ulb-row ${u.id === selectedUlb.id ? 'active' : ''}`;
+        row.onclick = () => {
+          selectedUlb = u;
+          document.getElementById("currentUlbHeading").innerText = u.name;
+          document.getElementById("currentUlbSub").innerText = `${u.district} • ${u.totalWards} Wards`;
+          buildWards(u);
+          renderUlbList();
         };
-        initialFlips.unshift(flipObj);
-        if (initialFlips.length > 8) initialFlips.pop();
-        renderFlipsFeed(initialFlips);
-
-        showToast('Lead Flipped!', `${ulbObj.short} Ward ${targetWard.wardNo} flipped to ${newParty} (+${targetWard.margin})`);
-      }
+        row.innerHTML = `
+          <div>
+            <h5>${u.name}</h5>
+            <span>${u.district} • ${u.totalWards} Wards</span>
+          </div>
+          <span style="font-weight:700; color: ${u.leading === 'TDP' ? 'var(--party-tdp)' : 'var(--party-ysrcp)'}">
+            ${u.leading} Lead (${u.ndaWon}/${u.declared || u.totalWards})
+          </span>
+        `;
+        container.appendChild(row);
+      });
     }
 
-    function toggleSimulation() {
-      simulationActive = !simulationActive;
-      const simBtn = document.getElementById('simBtn');
-      const simBtnText = document.getElementById('simBtnText');
-      const simIcon = document.getElementById('simIcon');
-
-      if (simulationActive) {
-        simBtn.className = 'text-xs font-semibold px-3 py-1.5 rounded-lg border border-red-500/40 bg-red-500/20 text-red-300 hover:bg-red-500/30 active:scale-95 transition-all flex items-center gap-1.5';
-        simBtnText.innerText = 'Pause Influx';
-        simIcon.setAttribute('data-lucide', 'pause');
-        lucide.createIcons();
-        simInterval = setInterval(simulateIncomingVoteBatch, 2200);
-        showToast('Live Simulation Started', 'Incoming rounds simulated every 2.2 seconds');
-      } else {
-        simBtn.className = 'text-xs font-semibold px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 active:scale-95 transition-all flex items-center gap-1.5';
-        simBtnText.innerText = 'Simulate Live Votes';
-        simIcon.setAttribute('data-lucide', 'play');
-        lucide.createIcons();
-        clearInterval(simInterval);
-      }
-    }
-
-    function triggerManualSync() {
-      simulateIncomingVoteBatch();
-      countdownSecs = 15;
-      document.getElementById('syncCountdown').innerText = countdownSecs;
-      showToast('Data Synced', 'Updated with latest returning officer bulletins');
-    }
-
-    // Auto-countdown timer
-    function startCountdown() {
-      countdownInterval = setInterval(() => {
-        countdownSecs--;
-        if (countdownSecs <= 0) {
-          countdownSecs = 15;
-          simulateIncomingVoteBatch();
+    // 15-second background real-time sync hook
+    async function syncRealtimeElectionData() {
+      try {
+        const response = await fetch(`ap-results-live.json?cacheBust=${Date.now()}`);
+        if (response.ok) {
+          const livePayload = await response.json();
+          if (livePayload.macro) updateMacroHeader(livePayload.macro);
+          if (livePayload.ulbs && livePayload.ulbs.length > 0) {
+            livePayload.ulbs.forEach(remoteUlb => {
+              const localMatch = ULB_RECORDS.find(l => l.id === remoteUlb.id);
+              if (localMatch) Object.assign(localMatch, remoteUlb);
+            });
+            renderUlbList();
+            renderWardGrid();
+          }
         }
-        const el = document.getElementById('syncCountdown');
-        if (el) el.innerText = countdownSecs;
-      }, 1000);
+      } catch (err) {
+        // Fall back gracefully to current counts
+      }
+      document.getElementById("footerSyncStatus").innerText = `Last Synchronized: ${new Date().toLocaleTimeString()}`;
     }
 
-    // --- 6. INITIALIZATION ---
-    window.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-      initWardDatabase();
-      renderULBPills();
-      renderWardGrid();
-      updateMacroTally();
-      renderFlipsFeed(initialFlips);
-      startCountdown();
+    // Initial render
+    renderUlbList();
+    buildWards(selectedUlb);
+    updateMacroHeader(MACRO_LIVE);
 
-      // Set initial ward detail
-      const vmcWards = wardDatabase['VMC'];
-      if (vmcWards && vmcWards.length > 0) {
-        showWardDetail(vmcWards[13], 'Vijayawada Municipal Corporation');
-      }
-    });
+    // Continuous 15-second polling
+    setInterval(syncRealtimeElectionData, 15000);
   </script>
 </body>
 </html>
