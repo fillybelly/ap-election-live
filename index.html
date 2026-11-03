@@ -4,198 +4,297 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="referrer" content="no-referrer">
-<title>AP Urban Local Body Elections 2026 | Independent results tracker</title>
+<title>AP Urban Local Body Elections 2026 | Independent live results tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;600;700&family=Source+Sans+3:wght@400;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <style>
-:root{--navy:#0e2a47;--deep:#0b1f36;--gold:#c59b27;--bg:#f3f6fa;--card:#fff;--line:#cbd5e1;--ink:#0f172a;--mut:#475569;
---tdp:#eab308;--jsp:#dc2626;--bjp:#ea580c;--ysrcp:#2563eb;--cpm:#991b1b;--inc:#0891b2;--ind:#64748b;--oth:#94a3b8;
---ok:#15803d;--warn:#b45309;--off:#b91c1c}
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Source Sans 3',sans-serif}
+:root{--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--bg:#f4f6fa;--card:#fff;--navy:#0b1f36;--gold:#c59b27;
+--nda:#e0ae00;--ysr:#2563eb;--oth:#64748b;--pend:#cbd5e1;--ok:#15803d;--warn:#b45309;--off:#b91c1c;
+--tdp:#eab308;--jsp:#dc2626;--bjp:#ea580c;--cpm:#991b1b;--inc:#0891b2}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Source Sans 3','Noto Sans Telugu',sans-serif}
 body{background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+.wrap{width:min(1240px,94vw);margin:0 auto}
+.mono{font-family:'JetBrains Mono',monospace}
 .util{background:#fff7e6;border-bottom:1px solid #f1d9a0;padding:6px 24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.76rem;font-weight:700;color:#7c5a00}
 .util a{color:#7c5a00}
-.hdr{background:#fff;border-bottom:2px solid var(--gold);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
-.brand{display:flex;align-items:center;gap:14px}
-.logo{width:48px;height:48px;border-radius:10px;background:var(--deep);color:#fde047;display:flex;align-items:center;justify-content:center;font:700 1.1rem 'JetBrains Mono',monospace;border:2px solid var(--gold)}
-.brand h1{font-size:1.28rem;font-weight:800;color:var(--deep);letter-spacing:-.01em}
-.brand .te{font-family:'Noto Sans Telugu',sans-serif;font-size:.95rem;font-weight:700;color:var(--navy)}
-.brand p{font-size:.76rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
-.status{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.badge{display:flex;align-items:center;gap:8px;border-radius:4px;padding:6px 12px;font-size:.76rem;font-weight:800;border:1px solid}
+.hdr{background:#fff;border-bottom:1px solid var(--line);padding:10px 0;position:sticky;top:0;z-index:50}
+.hdr .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:10px;background:var(--navy);color:#fde047;display:flex;align-items:center;justify-content:center;font:700 1rem 'JetBrains Mono',monospace;border:2px solid var(--gold)}
+.brand h1{font-size:1.1rem;font-weight:800;color:var(--navy);line-height:1.15}.brand p{font-size:.72rem;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg2{display:flex;background:#e2e8f0;border-radius:6px;padding:2px}.seg2 button{border:0;background:transparent;padding:5px 12px;font-size:.78rem;font-weight:800;color:#475569;cursor:pointer;border-radius:4px}.seg2 button.on{background:#fff;color:var(--navy);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.badge{display:flex;align-items:center;gap:7px;border-radius:5px;padding:6px 11px;font-size:.74rem;font-weight:800;border:1px solid}
 .badge .dot{width:8px;height:8px;border-radius:50%}
 .badge.fresh{background:#ecfdf5;border-color:#a7f3d0;color:var(--ok)}.badge.fresh .dot{background:#10b981;box-shadow:0 0 6px #10b981;animation:pl 1.5s infinite}
 .badge.aging{background:#fffbeb;border-color:#fde68a;color:var(--warn)}.badge.aging .dot{background:#f59e0b}
 .badge.stale{background:#f1f5f9;border-color:#cbd5e1;color:#475569}.badge.stale .dot{background:#94a3b8}
 .badge.off{background:#fef2f2;border-color:#fecaca;color:var(--off)}.badge.off .dot{background:#ef4444}
 @keyframes pl{50%{opacity:.3}}
-.tag{font-size:.68rem;font-weight:800;padding:4px 8px;border-radius:4px;background:#fef3c7;color:#92400e;border:1px solid #fde68a}
-.tag.official{background:#dcfce7;color:#166534;border-color:#bbf7d0}
-.rbtn{border:1px solid var(--line);background:#fff;border-radius:4px;padding:6px 10px;font-size:.74rem;font-weight:700;cursor:pointer;color:var(--navy)}
-.rbtn:hover{border-color:var(--navy)}
-.leaders{background:#fff;border-bottom:1px solid var(--line);padding:12px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
-.leader{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0}
-.leader .ph{width:54px;height:54px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:1rem}
-.leader h4{font-size:.86rem;font-weight:700;color:var(--navy)}.leader p{font-size:.72rem;color:var(--mut)}
-.pt{display:inline-block;font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:3px;margin-top:2px}
-.banner{background:var(--deep);color:#fff;padding:14px 24px;border-bottom:3px solid var(--gold)}
-.bhead{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:16px;align-items:end;margin-bottom:10px}
-.lbl{font-size:.72rem;text-transform:uppercase;color:#94a3b8;letter-spacing:.03em}
-.big{font:800 1.5rem 'JetBrains Mono',monospace}
-.sub{font-size:.76rem;color:#cbd5e1;margin-top:2px}
-.bar{height:26px;background:#1e3a5f;border-radius:4px;display:flex;overflow:hidden;position:relative}
-.seg{display:flex;align-items:center;justify-content:center;font:800 .74rem 'JetBrains Mono',monospace;transition:width .4s;overflow:hidden;white-space:nowrap}
-.bar .empty{width:100%;display:flex;align-items:center;justify-content:center;font-size:.76rem;color:#94a3b8}
-.scope{margin-top:8px;font-size:.76rem;color:#cbd5e1}
-.grid{display:grid;grid-template-columns:330px 1fr 350px;flex:1;padding:18px 24px;gap:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;overflow:hidden}
-.ch{background:#f1f5f9;border-bottom:1px solid var(--line);padding:10px 14px;font-size:.82rem;font-weight:700;color:var(--navy);display:flex;justify-content:space-between;align-items:center;gap:10px}
-.list{overflow-y:auto;max-height:600px}
-.row{padding:10px 14px;border-bottom:1px solid #f1f5f9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;border-left:3px solid transparent}
-.row:hover,.row.active{background:#e0f2fe;border-left-color:var(--navy)}
-.row h5{font-size:.84rem;font-weight:700;color:#1e293b}.row span.s{font-size:.72rem;color:#64748b}
-.row .r{text-align:right;font-size:.76rem;font-weight:700;white-space:nowrap}
-.tabs{display:flex;background:#e2e8f0;border-radius:4px;padding:2px;gap:4px}
-.tab{border:none;background:transparent;padding:5px 12px;font-size:.75rem;font-weight:700;color:#475569;cursor:pointer;border-radius:3px}
-.tab.on{background:#fff;color:var(--navy);box-shadow:0 1px 2px rgba(0,0,0,.1)}
-.mapwrap{position:relative;background:#e2e8f0;height:520px}
-#map{width:100%;height:100%;z-index:1}
-.mapmsg{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;color:#475569;font-size:.9rem;z-index:2;background:#e2e8f0}
-.zoombar{position:absolute;top:12px;right:12px;z-index:500;display:flex;gap:6px;background:rgba(15,23,42,.88);padding:5px;border-radius:6px}
-.zb{background:transparent;border:1px solid rgba(255,255,255,.25);color:#f8fafc;font-size:.7rem;font-weight:700;padding:4px 8px;border-radius:4px;cursor:pointer}
-.zb:hover{background:var(--tdp);color:#000;border-color:var(--tdp)}
+.tag{font-size:.66rem;font-weight:800;padding:4px 8px;border-radius:4px;background:#fef3c7;color:#92400e;border:1px solid #fde68a}.tag.official{background:#dcfce7;color:#166534;border-color:#bbf7d0}
+.rbtn{border:1px solid var(--line);background:#fff;border-radius:5px;padding:6px 10px;font-size:.74rem;font-weight:700;cursor:pointer;color:var(--navy)}.rbtn:hover{border-color:var(--navy)}
+/* hero */
+.hero{background:linear-gradient(135deg,#0b1f36,#16365c);color:#fff;padding:22px 0 26px;border-bottom:3px solid var(--gold)}
+.hero .kick{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:#cbd5e1;font-weight:700}
+.hero h2{font-size:clamp(1.5rem,3.6vw,2.3rem);font-weight:800;margin:4px 0 4px;letter-spacing:-.01em}
+.hero .lead{font-size:.95rem;color:#e2e8f0;max-width:820px}
+.hero .asof{font-size:.74rem;color:#94a3b8;margin-top:6px;line-height:1.45}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:12px 14px}
+.stat .l{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#cbd5e1;font-weight:700}
+.stat .n{font:800 1.6rem 'JetBrains Mono',monospace;margin:2px 0}
+.stat .s{font-size:.78rem;color:#e2e8f0;line-height:1.4}
+.pbar{height:7px;background:rgba(255,255,255,.18);border-radius:4px;overflow:hidden;margin-top:8px}.pbar i{display:block;height:100%;background:#fde047}
+/* alliance cards */
+.alli{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:-14px;position:relative}
+.ac{background:#fff;border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:14px 16px;box-shadow:0 4px 14px rgba(15,23,42,.07)}
+.ac .t{font-size:.74rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+.ac .t2{font-size:.78rem;color:var(--mut)}
+.ac .big{font:800 1.9rem 'JetBrains Mono',monospace;color:var(--ink);margin:4px 0 0}
+.ac .sub{font-size:.8rem;color:var(--mut)}
+.track{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin:8px 0 6px}.track i{display:block;height:100%;background:var(--c)}
+.ac .row{display:flex;justify-content:space-between;font-size:.8rem;margin-top:4px}
+/* leaders */
+.leaders{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:18px 0 6px}
+.leader{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:#fff;border:1px solid var(--line)}
+.leader .ph{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);background:#e2e8f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.95rem}
+.leader h4{font-size:.82rem;font-weight:700;color:var(--navy)}.leader p{font-size:.7rem;color:var(--mut)}
+.pt{display:inline-block;font-size:.64rem;font-weight:800;padding:1px 6px;border-radius:3px;margin-top:2px}
+/* tabs */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 14px;border-bottom:2px solid var(--line);padding-bottom:0}
+.tabs button{border:0;background:transparent;padding:10px 16px;font-size:.9rem;font-weight:800;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button.on{color:var(--navy);border-bottom-color:var(--gold)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tools input,.tools select{padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:.85rem;background:#fff;min-width:150px}
+.tools input{flex:1;min-width:200px;max-width:360px}
+.note{background:#f8fafc;border:1px dashed var(--line);border-radius:8px;padding:10px 12px;font-size:.8rem;color:#475569;line-height:1.5;margin-bottom:12px}
+/* corp cards */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:30px}
+.cc{background:#fff;border:1px solid var(--line);border-left:5px solid var(--pc,var(--pend));border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:9px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.cc .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.cc h3{font-size:1.02rem;font-weight:800;color:var(--navy)}.cc .meta{font-size:.74rem;color:var(--mut)}
+.st{display:inline-block;font-size:.64rem;font-weight:800;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.st.won{background:#dcfce7;color:#166534}.st.lead{background:#fef3c7;color:#92400e}.st.cont{background:#f1f5f9;color:#475569}.st.lost{background:#fee2e2;color:#991b1b}.st.info{background:#dbeafe;color:#1e40af}
+.mayor{display:flex;align-items:center;gap:10px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0;font-size:.95rem}
+.mayor .k{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700}
+.mayor .nm{font-size:.92rem;font-weight:800;color:var(--ink);line-height:1.25}
+.abar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--pend)}.abar i{display:block;height:100%}
+.legend2{display:flex;gap:10px;flex-wrap:wrap;font-size:.74rem;color:#475569}.legend2 b{font-family:'JetBrains Mono',monospace}.legend2 span{display:inline-flex;align-items:center;gap:4px}.legend2 u{width:9px;height:9px;display:inline-block;border-radius:2px;text-decoration:none}
+.bench{font-size:.78rem;color:#334155}.bench b{font-family:'JetBrains Mono',monospace}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.btn{border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:5px;padding:6px 11px;font-size:.76rem;font-weight:700;cursor:pointer}.btn.alt{background:#fff;color:var(--navy)}
+/* municipality list */
+.mrow{display:grid;grid-template-columns:2fr 1.1fr 1.6fr 1.4fr;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.mrow:hover{border-color:var(--navy)}.mrow h4{font-size:.92rem;font-weight:800;color:var(--navy)}.mrow .s{font-size:.74rem;color:var(--mut)}
+.mhead{display:grid;grid-template-columns:2fr 1.1fr 1.6fr 1.4fr;gap:10px;padding:0 12px 6px;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:800}
+/* feed rows */
+.frow{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.frow:hover{border-color:var(--navy)}.frow .nm{font-weight:800;font-size:.92rem}.frow .s{font-size:.76rem;color:var(--mut)}.frow .r{margin-left:auto;text-align:right}
+/* map */
+.mapwrap{height:540px;border:1px solid var(--line);border-radius:10px;overflow:hidden;position:relative;background:#e2e8f0;margin-bottom:24px}
+#map{width:100%;height:100%}
 .pin{display:inline-flex;align-items:center;gap:5px;background:#0b1f36;color:#fff;border:2px solid var(--pc,#94a3b8);border-radius:999px;padding:2px 8px 2px 5px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.35);transform:translate(-50%,-50%)}
-.pin:hover{transform:translate(-50%,-50%) scale(1.1);z-index:999!important}
-.pin.sel{outline:3px solid #fff;outline-offset:1px}
-.pin i{width:9px;height:9px;border-radius:50%;background:var(--pc,#94a3b8)}
-.pin b{font:700 10px 'JetBrains Mono',monospace;color:#fde047}
-.pin b.none{color:#94a3b8}
-.leaflet-tooltip.tip{background:#0b1f36;color:#fff;border:1px solid var(--gold);border-radius:6px;padding:8px 12px;box-shadow:0 6px 16px rgba(0,0,0,.35)}
-.wards{padding:16px;display:none;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px;max-height:520px;overflow-y:auto;align-content:start}
-.wmsg{padding:30px;color:#475569;font-size:.9rem;line-height:1.5;display:none}
-.wb{border:1px solid var(--line);border-radius:4px;padding:6px 2px;text-align:center;cursor:pointer;background:#f8fafc}
-.wb:hover{border-color:var(--navy)}.wb.pend{border-style:dashed;color:#94a3b8;cursor:default}.wb.on{outline:2px solid var(--navy)}
-.wb .n{font:700 .75rem 'JetBrains Mono',monospace}.wb .p{font-size:.65rem;font-weight:800;margin-top:2px}
-.legend{background:#fff;border:1px solid var(--line);border-radius:6px;padding:10px 14px;font-size:.78rem;display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:14px}
-.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:10px;height:10px;display:inline-block}
-.center{display:flex;flex-direction:column}
-.det{padding:16px}
-.det h3{font-size:1rem;color:var(--navy)}.det .meta{font-size:.76rem;color:#64748b;margin:2px 0 12px}
-.st{display:inline-block;font-size:.65rem;font-weight:800;padding:2px 6px;border-radius:3px;background:#dbeafe;color:#1e40af}
-.st.c{background:#fef9c3;color:#854d0e}.st.n{background:#f1f5f9;color:#475569}.st.d{background:#dcfce7;color:#166534}
-.pr{margin-bottom:11px}.pl{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:4px}.pl b.v{font-family:'JetBrains Mono',monospace}
-.track{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}.fill{height:100%;border-radius:4px;transition:width .3s}
-.kv{margin-top:14px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:.76rem;color:#64748b;line-height:1.55}
-.kv strong{color:var(--ink)}.kv a{color:#1d4ed8;word-break:break-word}
-.empty-note{padding:12px;background:#f8fafc;border:1px dashed var(--line);border-radius:4px;font-size:.8rem;color:#475569;margin:10px 0}
-footer{background:var(--deep);color:#94a3b8;font-size:.75rem;padding:14px 24px;border-top:2px solid var(--gold);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;line-height:1.55}
-footer a{color:#cbd5e1}.mono{font-family:'JetBrains Mono',monospace}
-@media(max-width:1024px){.grid{grid-template-columns:1fr}.bhead{grid-template-columns:1fr}.list{max-height:340px}}
+.pin i{width:9px;height:9px;border-radius:50%;background:var(--pc,#94a3b8)}.pin b{font:700 10px 'JetBrains Mono',monospace;color:#fde047}
+/* modal */
+#modal{position:fixed;inset:0;background:rgba(11,31,54,.55);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:4vh 12px;overflow-y:auto}
+#modal.on{display:flex}
+.mbox{background:#fff;border-radius:12px;width:min(900px,100%);box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden}
+.mh{background:var(--navy);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:3px solid var(--gold)}
+.mh h3{font-size:1.2rem;font-weight:800}.mh p{font-size:.78rem;color:#cbd5e1}
+.xbtn{border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:5px;padding:5px 11px;font-weight:800;cursor:pointer}
+.mtabs{display:flex;gap:4px;padding:8px 14px 0;border-bottom:1px solid var(--line);background:#f8fafc;flex-wrap:wrap}
+.mtabs button{border:0;background:transparent;padding:8px 12px;font-size:.82rem;font-weight:800;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent}.mtabs button.on{color:var(--navy);border-bottom-color:var(--gold)}
+.mb{padding:16px 18px}
+.kv{font-size:.78rem;color:#64748b;line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0}.kv strong{color:var(--ink)}.kv a{color:#1d4ed8;word-break:break-word}
+.pr{margin-bottom:10px}.pl{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:3px}
+.fill{height:8px;border-radius:4px;background:var(--c)}.trk{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.cand{display:grid;grid-template-columns:12px 1fr auto auto;gap:8px;align-items:center;padding:7px 4px;border-bottom:1px solid #f1f5f9;font-size:.86rem}
+.cand.win{background:#f0fdf4}.cand .d{width:10px;height:10px;border-radius:50%}.cand .v{font:700 .78rem 'JetBrains Mono',monospace;color:#334155}
+.cand .pc{font-size:.7rem;font-weight:800;color:#475569}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;margin-bottom:14px}
+.wb{border:1px solid var(--line);border-radius:5px;padding:5px 2px;text-align:center;cursor:pointer;background:#f8fafc}.wb.pend{border-style:dashed;color:#94a3b8;cursor:default}.wb.on{outline:2px solid var(--navy)}
+.wb .n{font:700 .72rem 'JetBrains Mono',monospace}.wb .p{font-size:.62rem;font-weight:800;margin-top:1px}
+.wcard{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden}.wcard h5{background:#f1f5f9;padding:6px 10px;font-size:.78rem;font-weight:800;color:var(--navy);display:flex;justify-content:space-between}
+footer{background:var(--navy);color:#94a3b8;font-size:.75rem;padding:14px 0;border-top:2px solid var(--gold);line-height:1.55;margin-top:auto}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}footer a{color:#cbd5e1}
+@media(max-width:860px){.stats,.alli{grid-template-columns:1fr}.alli{margin-top:12px}.mrow,.mhead{grid-template-columns:1fr 1fr}.mhead{display:none}}
 </style>
 </head>
 <body>
 
 <div class="util">
-  <span>INDEPENDENT RESULTS TRACKER &bull; NOT AFFILIATED WITH THE ANDHRA PRADESH STATE ELECTION COMMISSION</span>
-  <span>Official results: <a href="https://sec.ap.gov.in/" target="_blank" rel="noopener noreferrer">sec.ap.gov.in</a></span>
+  <span id="utilL">INDEPENDENT RESULTS TRACKER &bull; NOT AFFILIATED WITH THE ANDHRA PRADESH STATE ELECTION COMMISSION</span>
+  <span><span id="utilR">Official results:</span> <a href="https://sec.ap.gov.in/" target="_blank" rel="noopener noreferrer">sec.ap.gov.in</a></span>
 </div>
 
-<header class="hdr">
-  <div class="brand">
-    <div class="logo">AP</div>
-    <div>
-      <div class="te">పురపాలక సంస్థల ఎన్నికల ఫలితాలు</div>
-      <h1>AP Urban Local Body Elections 2026</h1>
-      <p>Independent live results tracker &bull; counting 3 Nov 2026</p>
-    </div>
-  </div>
-  <div class="status">
-    <div class="badge stale" id="badge"><span class="dot"></span><span id="badgeText">Loading…</span></div>
+<header class="hdr"><div class="wrap">
+  <div class="brand"><div class="logo">AP</div><div><h1 id="hTitle">AP Urban Local Body Elections 2026</h1><p id="hSub">Independent live results tracker</p></div></div>
+  <div class="right">
+    <div class="seg2"><button id="lEn" class="on" type="button">EN</button><button id="lTe" type="button">తెలుగు</button></div>
+    <div class="badge stale" id="badge"><span class="dot"></span><span id="badgeText">…</span></div>
     <span class="tag" id="kindTag">UNOFFICIAL</span>
-    <button class="rbtn" id="refreshBtn" type="button">&#8635; Refresh now</button>
+    <button class="rbtn" id="refreshBtn" type="button">&#8635;</button>
   </div>
-</header>
+</div></header>
 
-<section class="leaders" id="leaders"></section>
+<section class="hero"><div class="wrap">
+  <div class="kick" id="heroKick"></div>
+  <h2 id="heroHead"></h2>
+  <div class="lead" id="heroLead"></div>
+  <div class="asof" id="heroAsOf"></div>
+  <div class="stats" id="stats"></div>
+</div></section>
 
-<section class="banner">
-  <div class="bhead">
-    <div><div class="lbl" id="ndaLbl">NDA wards (TDP + JSP + BJP)</div><div class="big" style="color:var(--tdp)" id="ndaBig">—</div><div class="sub" id="ndaSub"></div></div>
-    <div style="text-align:center"><div class="lbl">Mayor posts &mdash; 13 corporations</div><div class="sub" style="font-size:.84rem;color:#e2e8f0" id="mayorLine">—</div><div class="sub" id="declLine"></div></div>
-    <div style="text-align:right"><div class="lbl">YSRCP wards</div><div class="big" style="color:#60a5fa" id="ysrBig">—</div><div class="sub" id="ysrSub"></div></div>
-  </div>
-  <div class="bar" id="bar"></div>
-  <div class="scope" id="scope"></div>
-</section>
+<div class="wrap">
+  <section class="alli" id="alli"></section>
+  <section class="leaders" id="leaders"></section>
+  <nav class="tabs" id="tabs"></nav>
+  <main id="view"></main>
+</div>
 
-<main class="grid">
-  <div class="card">
-    <div class="ch"><span>MUNICIPAL CORPORATIONS</span><span style="font-size:.7rem;color:#475569" id="listCount"></span></div>
-    <div class="list" id="list"></div>
-  </div>
+<div id="modal" role="dialog" aria-modal="true"><div class="mbox" id="mbox"></div></div>
 
-  <div class="center">
-    <div class="card">
-      <div class="ch">
-        <div><span id="mapTitle">Andhra Pradesh &mdash; 13 Municipal Corporations</span>
-          <div style="font-size:.72rem;color:#64748b;font-weight:400" id="mapSub">Click a corporation pin to see its published results</div></div>
-        <div class="tabs"><button class="tab on" id="tabMap" type="button">Map</button><button class="tab" id="tabGrid" type="button">Ward divisions</button></div>
-      </div>
-      <div class="mapwrap" id="mapWrap">
-        <div class="zoombar">
-          <button class="zb" type="button" data-z="ALL">Full AP</button><button class="zb" type="button" data-z="N">Uttarandhra</button>
-          <button class="zb" type="button" data-z="C">Coastal AP</button><button class="zb" type="button" data-z="R">Rayalaseema</button>
-        </div>
-        <div id="map"></div>
-        <div class="mapmsg" id="mapMsg">The map library could not be loaded. The results list and detail panel still work.</div>
-      </div>
-      <div class="wards" id="wards"></div>
-      <div class="wmsg" id="wmsg"></div>
-    </div>
-    <div class="legend">
-      <b style="color:var(--navy)">PIN COLOUR = LEADING PARTY BY DECLARED WARDS</b>
-      <span><i style="background:var(--tdp)"></i>TDP</span><span><i style="background:var(--jsp)"></i>JSP</span><span><i style="background:var(--bjp)"></i>BJP</span>
-      <span><i style="background:var(--ysrcp)"></i>YSRCP</span><span><i style="background:var(--oth)"></i>No ward result yet</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="ch"><span>RESULT DETAIL</span><span class="st n" id="detBadge">—</span></div>
-    <div class="det" id="det"></div>
-  </div>
-</main>
-
-<footer>
-  <div id="footL">This is an independent tracker. Figures are copied from the source named in each panel and may lag or differ from official declarations. Always confirm with the State Election Commission.</div>
-  <div class="mono" id="footR"></div>
-</footer>
+<footer><div class="wrap"><div id="footL"></div><div class="mono" id="footR"></div></div></footer>
 
 <script>
-/* ===================================================================
-   Data contract: see README.md. Every number shown comes from the feed;
-   nothing is generated or simulated in the browser.
-   =================================================================== */
+/* ==================================================================
+   Nothing on this page is simulated. Every number and name comes from
+   the data feed (see README.md); missing values are shown as missing.
+   ================================================================== */
 const SEED = {
  "meta": {
   "kind": "media",
-  "source": "India TV News live blogs (ward tallies) and Samayam Telugu (mayor leads) - media-reported, not official",
+  "source": "Compiled from media reports: ETV Bharat, India TV, Samayam Telugu, News18, NTV Telugu (not official)",
   "sourceUrl": "https://sec.ap.gov.in/",
   "publishedAt": "2026-11-03T19:58:00+05:30",
-  "note": "Snapshot of media-reported tallies. Replace through /api/results or by editing this file. Official figures: sec.ap.gov.in"
+  "note": "Snapshot of media-reported figures. Sources were captured at different times and may disagree. Official results: sec.ap.gov.in"
  },
  "macro": {
-  "bodiesTotal": 92,
+  "bodiesTotal": 100,
   "corporations": 13,
-  "municipalities": 79
+  "municipalities": 87,
+  "totalWards": 3942,
+  "declaredWards": 2704,
+  "leadingWards": 287,
+  "pendingWards": 951,
+  "alliances": {
+   "NDA": 2548,
+   "YSRCP": 379,
+   "OTH": 64
+  },
+  "bodies": {
+   "NDA": 91,
+   "YSRCP": 3,
+   "OTH": 3,
+   "PENDING": 3
+  },
+  "corpLeading": 11,
+  "corpPending": 2,
+  "muniWon": 37,
+  "muniLeading": 49,
+  "muniPending": 1,
+  "asOf": "ETV Bharat live page; the time it displays is 03:10:48 and no date is shown, so it may be older than the per-body figures",
+  "source": "ETV Bharat live results page",
+  "sourceUrl": "https://www.etvbharat.com/te/andhra-pradesh/!municipal-elections",
+  "note": "Alliance wards are won + leading. Per-body figures below come from other sources and may be more recent."
  },
+ "bodies": [
+  {
+   "id": "ichchapuram",
+   "kind": "muni",
+   "en": "Ichchapuram",
+   "te": "ఇచ్ఛాపురం"
+  },
+  {
+   "id": "palasa",
+   "kind": "muni",
+   "en": "Palasa-Kasibugga",
+   "te": "పలాస-కాశీబుగ్గ",
+   "district": "Srikakulam"
+  },
+  {
+   "id": "tuni",
+   "kind": "muni",
+   "en": "Tuni",
+   "te": "తుని"
+  },
+  {
+   "id": "kondapalli",
+   "kind": "muni",
+   "en": "Kondapalli",
+   "te": "కొండపల్లి"
+  },
+  {
+   "id": "tenali",
+   "kind": "muni",
+   "en": "Tenali",
+   "te": "తెనాలి"
+  },
+  {
+   "id": "badvel",
+   "kind": "muni",
+   "en": "Badvel",
+   "te": "బద్వేలు"
+  },
+  {
+   "id": "proddatur",
+   "kind": "muni",
+   "en": "Proddatur",
+   "te": "ప్రొద్దుటూరు"
+  },
+  {
+   "id": "pulivendula",
+   "kind": "muni",
+   "en": "Pulivendula",
+   "te": "పులివెందుల"
+  },
+  {
+   "id": "yeleswaram",
+   "kind": "np",
+   "en": "Yeleswaram",
+   "te": "ఏలేశ్వరం"
+  },
+  {
+   "id": "uyyuru",
+   "kind": "np",
+   "en": "Uyyuru",
+   "te": "ఉయ్యూరు"
+  },
+  {
+   "id": "gurazala",
+   "kind": "np",
+   "en": "Gurazala",
+   "te": "గురజాల"
+  },
+  {
+   "id": "kanigiri",
+   "kind": "np",
+   "en": "Kanigiri",
+   "te": "కనిగిరి"
+  },
+  {
+   "id": "buchireddypalem",
+   "kind": "np",
+   "en": "Buchireddypalem",
+   "te": "బుచ్చిరెడ్డిపాలెం"
+  },
+  {
+   "id": "kamalapuram",
+   "kind": "np",
+   "en": "Kamalapuram",
+   "te": "కమలాపురం"
+  }
+ ],
  "ulbs": [
   {
    "id": "gvmc",
    "totalWards": 120,
    "declared": 73,
+   "basis": "declared",
    "parties": {
     "TDP": 45,
     "JSP": 10,
@@ -205,13 +304,14 @@ const SEED = {
    },
    "mayorLead": "TDP",
    "updatedAt": "2026-11-03T19:51:00+05:30",
-   "source": "India TV News live blog (ward tally); Samayam Telugu (mayor lead)",
+   "source": "India TV News live blog (ward tally)",
    "sourceUrl": "https://www.indiatvnews.com/news/india/greater-visakhapatnam-municipal-corporation-election-results-live-updates-andhra-pradesh-urban-body-tdp-jsp-bjp-ysrcp-congress-candidates-winners-1058533"
   },
   {
    "id": "vja",
    "totalWards": 86,
    "declared": 38,
+   "basis": "declared",
    "parties": {
     "TDP": 22,
     "JSP": 8,
@@ -219,102 +319,530 @@ const SEED = {
     "YSRCP": 5,
     "CPM": 1
    },
-   "mayorLead": null,
    "updatedAt": "2026-11-03T19:58:00+05:30",
    "source": "India TV News live blog (ward tally)",
    "sourceUrl": "https://www.indiatvnews.com/news/india/vijayawada-municipal-corporation-election-results-live-updates-andhra-pradesh-tdp-jsp-bjp-ysrcp-congress-candidates-winners-1058537"
   },
   {
    "id": "vzm",
+   "totalWards": 62,
+   "declared": 10,
+   "basis": "declared+leading",
+   "parties": {
+    "TDP": 6,
+    "JSP": 2,
+    "BJP": 0,
+    "YSRCP": 2
+   },
    "mayorLead": "TDP",
-   "updatedAt": "2026-11-03T19:55:00+05:30",
-   "source": "Samayam Telugu (mayor lead)",
-   "sourceUrl": "https://telugu.samayam.com/andhra-pradesh/news/ap-municipal-corporation-election-results-2026-party-wise-winners-list-tdp-jana-sena-ysrcp-mayor-result/articleshow/135489763.cms"
+   "source": "ETV Bharat live page (won + leading; page time not stated)",
+   "sourceUrl": "https://www.etvbharat.com/te/andhra-pradesh/!municipal-elections"
   },
   {
    "id": "eluru",
+   "totalWards": 62,
+   "declared": 15,
+   "basis": "declared+leading",
+   "parties": {
+    "TDP": 5,
+    "JSP": 8,
+    "BJP": 1,
+    "YSRCP": 0,
+    "OTH": 1
+   },
    "mayorLead": "JSP",
-   "updatedAt": "2026-11-03T19:55:00+05:30",
-   "source": "Samayam Telugu (mayor lead)",
-   "sourceUrl": "https://telugu.samayam.com/andhra-pradesh/news/ap-municipal-corporation-election-results-2026-party-wise-winners-list-tdp-jana-sena-ysrcp-mayor-result/articleshow/135489763.cms"
+   "source": "ETV Bharat live page (won + leading; page time not stated)",
+   "sourceUrl": "https://www.etvbharat.com/te/andhra-pradesh/!municipal-elections"
   },
   {
    "id": "mpt",
+   "totalWards": 60,
+   "basis": "declared+leading",
+   "alliances": {
+    "NDA": 16,
+    "YSRCP": 4
+   },
    "mayorLead": "TDP",
-   "updatedAt": "2026-11-03T19:55:00+05:30",
-   "source": "Samayam Telugu (mayor lead)",
-   "sourceUrl": "https://telugu.samayam.com/andhra-pradesh/news/ap-municipal-corporation-election-results-2026-party-wise-winners-list-tdp-jana-sena-ysrcp-mayor-result/articleshow/135489763.cms"
+   "note": "Source text was cut off after the YSRCP figure; others not stated.",
+   "source": "ETV Bharat live page (won + leading; page time not stated)",
+   "sourceUrl": "https://www.etvbharat.com/te/andhra-pradesh/!municipal-elections"
   },
   {
    "id": "gtr",
-   "mayorLead": "TDP",
-   "updatedAt": "2026-11-03T19:55:00+05:30",
-   "source": "Samayam Telugu (mayor lead)",
+   "mayorAlliance": "NDA",
+   "source": "Samayam Telugu (mayor-post lead)",
    "sourceUrl": "https://telugu.samayam.com/andhra-pradesh/news/ap-municipal-corporation-election-results-2026-party-wise-winners-list-tdp-jana-sena-ysrcp-mayor-result/articleshow/135489763.cms"
   },
   {
    "id": "nellore",
-   "mayorLead": "TDP",
-   "updatedAt": "2026-11-03T19:55:00+05:30",
-   "source": "Samayam Telugu (mayor lead)",
+   "mayorAlliance": "NDA",
+   "source": "Samayam Telugu (mayor-post lead)",
    "sourceUrl": "https://telugu.samayam.com/andhra-pradesh/news/ap-municipal-corporation-election-results-2026-party-wise-winners-list-tdp-jana-sena-ysrcp-mayor-result/articleshow/135489763.cms"
   },
   {
    "id": "tpt",
-   "mayorLead": "TDP",
-   "updatedAt": "2026-11-03T19:55:00+05:30",
-   "source": "Samayam Telugu (mayor lead)",
+   "mayorAlliance": "NDA",
+   "source": "Samayam Telugu (mayor-post lead)",
    "sourceUrl": "https://telugu.samayam.com/andhra-pradesh/news/ap-municipal-corporation-election-results-2026-party-wise-winners-list-tdp-jana-sena-ysrcp-mayor-result/articleshow/135489763.cms"
   },
   {
    "id": "chittoor",
-   "mayorLead": "TDP",
-   "updatedAt": "2026-11-03T19:55:00+05:30",
-   "source": "Samayam Telugu (mayor lead)",
+   "mayorAlliance": "NDA",
+   "source": "Samayam Telugu (mayor-post lead)",
    "sourceUrl": "https://telugu.samayam.com/andhra-pradesh/news/ap-municipal-corporation-election-results-2026-party-wise-winners-list-tdp-jana-sena-ysrcp-mayor-result/articleshow/135489763.cms"
   },
   {
    "id": "kdp",
-   "mayorLead": "TDP",
-   "updatedAt": "2026-11-03T19:55:00+05:30",
-   "source": "Samayam Telugu (mayor lead)",
+   "mayorAlliance": "NDA",
+   "source": "Samayam Telugu (mayor-post lead)",
    "sourceUrl": "https://telugu.samayam.com/andhra-pradesh/news/ap-municipal-corporation-election-results-2026-party-wise-winners-list-tdp-jana-sena-ysrcp-mayor-result/articleshow/135489763.cms"
   },
   {
    "id": "knl",
-   "mayorLead": "TDP",
-   "updatedAt": "2026-11-03T19:55:00+05:30",
-   "source": "Samayam Telugu (mayor lead)",
+   "mayorAlliance": "NDA",
+   "source": "Samayam Telugu (mayor-post lead)",
    "sourceUrl": "https://telugu.samayam.com/andhra-pradesh/news/ap-municipal-corporation-election-results-2026-party-wise-winners-list-tdp-jana-sena-ysrcp-mayor-result/articleshow/135489763.cms"
   }
  ],
+ "heads": {
+  "vzm": [
+   {
+    "name": "అవనాపు భార్గవి",
+    "nameTe": "అవనాపు భార్గవి",
+    "nameEn": "Avanapu Bhargavi",
+    "party": "TDP",
+    "status": "LEADING",
+    "note": "ETV Bharat / Samayam Telugu"
+   },
+   {
+    "name": "కోలగట్ల శ్రావణి",
+    "nameTe": "కోలగట్ల శ్రావణి",
+    "nameEn": "Kolagatla Sravani",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "gvmc": [
+   {
+    "name": "ముక్కా శ్రావణి",
+    "nameTe": "ముక్కా శ్రావణి",
+    "nameEn": "Mukka Sravani",
+    "party": "TDP",
+    "status": "LEADING",
+    "note": "ETV Bharat / Samayam Telugu"
+   },
+   {
+    "name": "వరుదు కళ్యాణి",
+    "nameTe": "వరుదు కళ్యాణి",
+    "nameEn": "Varudu Kalyani",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "eluru": [
+   {
+    "name": "రెడ్డి అప్పలనాయుడు",
+    "nameTe": "రెడ్డి అప్పలనాయుడు",
+    "nameEn": "Reddi Appalanaidu",
+    "party": "JSP",
+    "status": "LEADING",
+    "note": "ETV Bharat / Samayam Telugu"
+   },
+   {
+    "name": "గంటా మోహన్‌రావు",
+    "nameTe": "గంటా మోహన్‌రావు",
+    "nameEn": "Ganta Mohan Rao",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "mpt": [
+   {
+    "name": "షేక్ అబ్దుల్ అబీదా",
+    "nameTe": "షేక్ అబ్దుల్ అబీదా",
+    "nameEn": "Sheik Abdul Abeeda",
+    "party": "TDP",
+    "status": "LEADING",
+    "note": "ETV Bharat"
+   },
+   {
+    "name": "లంకా జ్యోతి",
+    "nameTe": "లంకా జ్యోతి",
+    "nameEn": "Lanka Jyothi",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "gtr": [
+   {
+    "name": "కోవెలమూడి లక్ష్మీ అపర్ణ",
+    "nameTe": "కోవెలమూడి లక్ష్మీ అపర్ణ",
+    "nameEn": "Kovelamudi Lakshmi Aparna",
+    "status": "LEADING",
+    "alliance": "NDA",
+    "note": "Samayam Telugu: alliance candidate leading; party not stated"
+   }
+  ],
+  "chittoor": [
+   {
+    "name": "కఠారి హేమలత",
+    "nameTe": "కఠారి హేమలత",
+    "nameEn": "Katari Hemalatha",
+    "status": "LEADING",
+    "alliance": "NDA",
+    "note": "Samayam Telugu: alliance candidate leading; party not stated"
+   }
+  ],
+  "knl": [
+   {
+    "name": "విజయ ప్రత్యూష",
+    "nameTe": "విజయ ప్రత్యూష",
+    "nameEn": "Vijaya Pratyusha",
+    "status": "LEADING",
+    "alliance": "NDA",
+    "note": "Samayam Telugu: alliance candidate leading; party not stated"
+   },
+   {
+    "name": "ఎం. సుశీల",
+    "nameTe": "ఎం. సుశీల",
+    "nameEn": "M. Susheela",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "kdp": [
+   {
+    "name": "దీప్తి రెడ్డి",
+    "nameTe": "దీప్తి రెడ్డి",
+    "nameEn": "Deepthi Reddy",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "nellore": [
+   {
+    "name": "ఆనం విజయ్‌కుమార్‌రెడ్డి",
+    "nameTe": "ఆనం విజయ్‌కుమార్‌రెడ్డి",
+    "nameEn": "Anam Vijay Kumar Reddy",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "ongole": [
+   {
+    "name": "కుప్పం ప్రసాద్",
+    "nameTe": "కుప్పం ప్రసాద్",
+    "nameEn": "Kuppam Prasad",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "pulivendula": [
+   {
+    "name": "Tugutla Geetha Kumari",
+    "nameEn": "Tugutla Geetha Kumari",
+    "party": "TDP",
+    "status": "WON",
+    "note": "News18 live blog: won Chairman post by 13,875 votes"
+   },
+   {
+    "name": "వైఎస్‌ ప్రమీలమ్మ",
+    "nameTe": "వైఎస్‌ ప్రమీలమ్మ",
+    "nameEn": "YS Prameelamma",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "narsipatnam": [
+   {
+    "name": "చింతకాయల అనిత",
+    "nameTe": "చింతకాయల అనిత",
+    "nameEn": "Chintakayala Anitha",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "yelamanchili": [
+   {
+    "name": "బుడ్డపు తులసి",
+    "nameTe": "బుడ్డపు తులసి",
+    "nameEn": "Buddapu Tulasi",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "tuni": [
+   {
+    "name": "రామతులసి",
+    "nameTe": "రామతులసి",
+    "nameEn": "Rama Tulasi",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "ichchapuram": [
+   {
+    "name": "పిలక రాజ్యలక్ష్మి",
+    "nameTe": "పిలక రాజ్యలక్ష్మి",
+    "nameEn": "Pilaka Rajyalakshmi",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "palasa": [
+   {
+    "name": "శ్రీపద్మ",
+    "nameTe": "శ్రీపద్మ",
+    "nameEn": "Sripadma",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "kovvur": [
+   {
+    "name": "మన్నే పద్మ",
+    "nameTe": "మన్నే పద్మ",
+    "nameEn": "Manne Padma",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "ramachandrapuram": [
+   {
+    "name": "చింతపల్లి నాగేశ్వరరావు",
+    "nameTe": "చింతపల్లి నాగేశ్వరరావు",
+    "nameEn": "Chintapalli Nageswara Rao",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "kondapalli": [
+   {
+    "name": "నల్లమోతు తేజస్వి",
+    "nameTe": "నల్లమోతు తేజస్వి",
+    "nameEn": "Nallamotu Tejaswi",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "tenali": [
+   {
+    "name": "మద్దాలి శేషాచలం",
+    "nameTe": "మద్దాలి శేషాచలం",
+    "nameEn": "Maddali Seshachalam",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "chirala": [
+   {
+    "name": "ఇస్తర్ల షేర్లీ",
+    "nameTe": "ఇస్తర్ల షేర్లీ",
+    "nameEn": "Istarla Sherly",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "badvel": [
+   {
+    "name": "రాచపూడి వెంకట సాయికృష్ణ",
+    "nameTe": "రాచపూడి వెంకట సాయికృష్ణ",
+    "nameEn": "Rachapudi Venkata Saikrishna",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "proddatur": [
+   {
+    "name": "పొర్రెడ్డి నరసింహారెడ్డి",
+    "nameTe": "పొర్రెడ్డి నరసింహారెడ్డి",
+    "nameEn": "Porreddy Narasimha Reddy",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "madanapalle": [
+   {
+    "name": "జింకా చలపతి",
+    "nameTe": "జింకా చలపతి",
+    "nameEn": "Jinka Chalapathi",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "yeleswaram": [
+   {
+    "name": "బాదిరెడ్డి ఆశాలత",
+    "nameTe": "బాదిరెడ్డి ఆశాలత",
+    "nameEn": "Badireddi Ashalata",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "uyyuru": [
+   {
+    "name": "పైడిముక్కల దివ్య",
+    "nameTe": "పైడిముక్కల దివ్య",
+    "nameEn": "Paidimukkala Divya",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "gurazala": [
+   {
+    "name": "పోలు వీరారెడ్డి",
+    "nameTe": "పోలు వీరారెడ్డి",
+    "nameEn": "Polu Veerareddy",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "kanigiri": [
+   {
+    "name": "పులి శాంతిరెడ్డి",
+    "nameTe": "పులి శాంతిరెడ్డి",
+    "nameEn": "Puli Shantireddy",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "buchireddypalem": [
+   {
+    "name": "షేక్‌ షకీలా బేగం",
+    "nameTe": "షేక్‌ షకీలా బేగం",
+    "nameEn": "Shaik Shakila Begum",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ],
+  "kamalapuram": [
+   {
+    "name": "మర్జుల కవిత",
+    "nameTe": "మర్జుల కవిత",
+    "nameEn": "Marjula Kavitha",
+    "party": "YSRCP",
+    "status": "CONTESTING",
+    "note": "YSRCP announcement of mayor/chairperson candidates, 15 Oct 2026 (NTV Telugu)"
+   }
+  ]
+ },
  "wards": {}
 };
 const FEEDS = ['/api/results', 'ap-results-live.json'];
 const POLL_MS = 30000, FRESH_MIN = 10, STALE_MIN = 60;
 
-const P = {
-  TDP:{c:'#eab308',t:'#000',n:'TDP'}, JSP:{c:'#dc2626',t:'#fff',n:'JSP'}, BJP:{c:'#ea580c',t:'#fff',n:'BJP'},
-  YSRCP:{c:'#2563eb',t:'#fff',n:'YSRCP'}, CPM:{c:'#991b1b',t:'#fff',n:'CPI(M)'}, INC:{c:'#0891b2',t:'#fff',n:'INC'},
-  IND:{c:'#64748b',t:'#fff',n:'Independent'}, OTH:{c:'#94a3b8',t:'#000',n:'Others'}
+/* ---------- constants ---------- */
+const PARTY = {
+  TDP:{c:'#eab308',t:'#000',en:'TDP',te:'తెదేపా'}, JSP:{c:'#dc2626',t:'#fff',en:'JSP',te:'జనసేన'}, BJP:{c:'#ea580c',t:'#fff',en:'BJP',te:'భాజపా'},
+  YSRCP:{c:'#2563eb',t:'#fff',en:'YSRCP',te:'వైసీపీ'}, CPM:{c:'#991b1b',t:'#fff',en:'CPI(M)',te:'సీపీఎం'}, INC:{c:'#0891b2',t:'#fff',en:'INC',te:'కాంగ్రెస్'},
+  IND:{c:'#64748b',t:'#fff',en:'Independent',te:'స్వతంత్ర'}, OTH:{c:'#94a3b8',t:'#000',en:'Others',te:'ఇతరులు'}
 };
-const ORDER = ['TDP','JSP','BJP','YSRCP','CPM','INC','IND','OTH'];
-const NDA = ['TDP','JSP','BJP'];
-const REG = [
-  {id:'gvmc',short:'Visakhapatnam',name:'Greater Visakhapatnam (GVMC)',district:'Visakhapatnam',lat:17.6868,lng:83.2185},
-  {id:'vja',short:'Vijayawada',name:'Vijayawada (VMC)',district:'NTR District',lat:16.5062,lng:80.6480},
-  {id:'gtr',short:'Guntur',name:'Guntur (GMC)',district:'Guntur',lat:16.3067,lng:80.4365},
-  {id:'nellore',short:'Nellore',name:'Nellore (NMC)',district:'SPSR Nellore',lat:14.4426,lng:79.9865},
-  {id:'knl',short:'Kurnool',name:'Kurnool (KMC)',district:'Kurnool',lat:15.8281,lng:78.0373},
-  {id:'tpt',short:'Tirupati',name:'Tirupati (TMC)',district:'Tirupati',lat:13.6288,lng:79.4192},
-  {id:'kdp',short:'Kadapa',name:'Kadapa Municipal Corporation',district:'YSR Kadapa',lat:14.4673,lng:78.8242},
-  {id:'vzm',short:'Vizianagaram',name:'Vizianagaram Corporation',district:'Vizianagaram',lat:18.1067,lng:83.3956},
-  {id:'eluru',short:'Eluru',name:'Eluru (EMC)',district:'Eluru',lat:16.7107,lng:81.0952},
-  {id:'atp',short:'Anantapur',name:'Anantapur Corporation',district:'Anantapur',lat:14.6819,lng:77.6006},
-  {id:'chittoor',short:'Chittoor',name:'Chittoor Corporation',district:'Chittoor',lat:13.2172,lng:79.1003},
-  {id:'mpt',short:'Machilipatnam',name:'Machilipatnam Corporation',district:'Krishna',lat:16.1875,lng:81.1389},
-  {id:'ongole',short:'Ongole',name:'Ongole (OMC)',district:'Prakasam',lat:15.5057,lng:80.0499}
-];
+const PKEYS = Object.keys(PARTY);
+const ALL = {
+  NDA:{c:'#e0ae00',t:'#000',en:'Kutami (TDP+JSP+BJP)',te:'కూటమి (తెదేపా+జనసేన+భాజపా)',sh:'Kutami',shTe:'కూటమి'},
+  YSRCP:{c:'#2563eb',t:'#fff',en:'YSR Congress Party',te:'వైఎస్సార్‌సీపీ',sh:'YSRCP',shTe:'వైసీపీ'},
+  OTH:{c:'#64748b',t:'#fff',en:'Independents / Others',te:'స్వతంత్రులు / ఇతరులు',sh:'Others',shTe:'ఇతరులు'}
+};
+const AKEYS = ['NDA','YSRCP','OTH'];
+const alliOf = p => (p==='TDP'||p==='JSP'||p==='BJP') ? 'NDA' : (p==='YSRCP' ? 'YSRCP' : 'OTH');
+const KIND = {corp:{en:'Municipal Corporation',te:'మున్సిపల్ కార్పొరేషన్',head:{en:'Mayor',te:'మేయర్'}},
+              muni:{en:'Municipality',te:'మున్సిపాలిటీ',head:{en:'Chairperson',te:'చైర్‌పర్సన్'}},
+              np:{en:'Nagar Panchayat',te:'నగర పంచాయతీ',head:{en:'Chairperson',te:'చైర్‌పర్సన్'}}};
+const CSTAT = {WON:{en:'WON',te:'గెలుపు',cls:'won'}, LEADING:{en:'LEADING',te:'ఆధిక్యం',cls:'lead'}, CONTESTING:{en:'CONTESTING',te:'పోటీలో',cls:'cont'}, LOST:{en:'LOST',te:'ఓటమి',cls:'lost'}};
+
+const T = {
+ en:{title:'AP Urban Local Body Elections 2026',sub:'Independent live results tracker',kick:'Live results',bodies:'urban bodies',corps:'corporations',munis:'municipalities & nagar panchayats',wards:'wards',divs:'divisions',
+  tabCorp:'Corporations',tabMuni:'Municipalities & NPs',tabWin:'Winners & leaders',tabSearch:'Find a candidate',tabMap:'Map',
+  corpMayors:'Corporations · mayor posts',muniChairs:'Municipalities & NPs · chairperson posts',allWards:'All wards / divisions',declared:'declared',leading:'leading',pending:'pending',won:'won',
+  wonLead:'won + leading',ahead:'leading in',of:'of',needs:'needs',more:'more',majority:'Majority',majMark:'Majority mark',mayorCand:'Mayor candidate',chairCand:'Chairperson candidate',
+  noHead:'Head-post result not reported yet',announced:'announced candidates',partyWise:'Party-wise',contestants:'Contestants & divisions',close:'Close',overview:'Overview',heads:'Mayor / chair candidates',divisions:'Divisions / wards',
+  reservation:'Reservation',district:'District',allDistricts:'All districts',search:'Search by name…',lastUpd:'Last updated',source:'Source',noSource:'none supplied',noTs:'no timestamp',
+  awaiting:'Awaiting results',counting:'Counting',allDecl:'All declared',headDecl:'Head post declared',noMatch:'No match.',showing:'Showing',typeToSearch:'Type at least 2 letters to search the contestants loaded so far.',
+  noCands:'Contestant names for each division are not loaded for this body yet. They appear here as soon as the data source (or an operator import) provides them.',
+  noWards:'Division-level results are not available for this body yet.',votes:'votes',margin:'Margin',ward:'Ward',division:'Division',translit:'English spellings of Telugu names are approximate transliterations.',
+  loadedC:'contestant names loaded',partialBodies:'Directory covers',ofBodies:'of 87 municipalities & nagar panchayats; more appear as the feed adds them.',
+  winNote:'Declared and leading head-post candidates and declared ward winners found in the feed.',scopePartial:'Statewide totals are not in the feed yet; figures below add up only the bodies that have data.',
+  footL:'This is an independent tracker. Figures are copied from the source named in each panel and may lag or differ from official declarations. Always confirm with the State Election Commission.',
+  utilL:'INDEPENDENT RESULTS TRACKER • NOT AFFILIATED WITH THE ANDHRA PRADESH STATE ELECTION COMMISSION',utilR:'Official results:',
+  kutamiAhead:'Kutami alliance leading in',otherAhead:'leading in',
+  mapTitle:'Corporation map: pin colour = alliance ahead in declared + leading wards',
+  basisWL:'won + leading',basisD:'declared',notStated:'not stated'},
+ te:{title:'ఏపీ పట్టణ స్థానిక సంస్థల ఎన్నికలు 2026',sub:'స్వతంత్ర లైవ్ ఫలితాల ట్రాకర్',kick:'ప్రత్యక్ష ఫలితాలు',bodies:'పట్టణ సంస్థలు',corps:'కార్పొరేషన్లు',munis:'మున్సిపాలిటీలు & న.పం.',wards:'వార్డులు',divs:'డివిజన్లు',
+  tabCorp:'కార్పొరేషన్లు',tabMuni:'మున్సిపాలిటీలు & న.పం.',tabWin:'విజేతలు & ఆధిక్యం',tabSearch:'అభ్యర్థి కోసం వెతకండి',tabMap:'మ్యాప్',
+  corpMayors:'కార్పొరేషన్లు · మేయర్ పదవులు',muniChairs:'మున్సిపాలిటీలు & న.పం. · చైర్మన్ పదవులు',allWards:'మొత్తం వార్డులు / డివిజన్లు',declared:'ప్రకటించినవి',leading:'ఆధిక్యం',pending:'తేలాల్సినవి',won:'గెలుపు',
+  wonLead:'గెలుపు + ఆధిక్యం',ahead:'ఆధిక్యంలో',of:'/',needs:'ఇంకా',more:'అవసరం',majority:'మెజారిటీ',majMark:'మెజారిటీ మార్క్',mayorCand:'మేయర్ అభ్యర్థి',chairCand:'చైర్మన్ అభ్యర్థి',
+  noHead:'ప్రధాన పదవి ఫలితం ఇంకా రాలేదు',announced:'ప్రకటించిన అభ్యర్థులు',partyWise:'పార్టీల వారీగా',contestants:'అభ్యర్థులు & డివిజన్లు',close:'మూసివేయి',overview:'సారాంశం',heads:'మేయర్ / చైర్మన్ అభ్యర్థులు',divisions:'డివిజన్లు / వార్డులు',
+  reservation:'రిజర్వేషన్',district:'జిల్లా',allDistricts:'అన్ని జిల్లాలు',search:'పేరుతో వెతకండి…',lastUpd:'చివరి అప్‌డేట్',source:'మూలం',noSource:'ఇవ్వలేదు',noTs:'సమయం లేదు',
+  awaiting:'ఫలితాల కోసం నిరీక్షణ',counting:'లెక్కింపు',allDecl:'అన్నీ ప్రకటించారు',headDecl:'ప్రధాన పదవి ప్రకటించారు',noMatch:'ఏదీ దొరకలేదు.',showing:'చూపుతున్నవి',typeToSearch:'ఇప్పటివరకు లోడ్ అయిన అభ్యర్థుల కోసం కనీసం 2 అక్షరాలు టైప్ చేయండి.',
+  noCands:'ఈ సంస్థలోని ప్రతి డివిజన్ అభ్యర్థుల పేర్లు ఇంకా లోడ్ కాలేదు. డేటా మూలం అందించగానే ఇక్కడ కనిపిస్తాయి.',
+  noWards:'ఈ సంస్థకు డివిజన్ స్థాయి ఫలితాలు ఇంకా అందుబాటులో లేవు.',votes:'ఓట్లు',margin:'మెజారిటీ',ward:'వార్డు',division:'డివిజన్',translit:'తెలుగు పేర్ల ఆంగ్ల స్పెల్లింగ్‌లు సుమారు లిప్యంతరీకరణలు.',
+  loadedC:'అభ్యర్థుల పేర్లు లోడ్ అయ్యాయి',partialBodies:'ఇక్కడ ఉన్నవి',ofBodies:'/ 87 మున్సిపాలిటీలు & న.పం.; మరిన్ని డేటా వచ్చినప్పుడు చేరతాయి.',
+  winNote:'డేటాలో ఉన్న ప్రకటిత మరియు ఆధిక్యంలో ఉన్న ప్రధాన పదవి అభ్యర్థులు, వార్డు విజేతలు.',scopePartial:'రాష్ట్ర మొత్తం గణాంకాలు ఇంకా డేటాలో లేవు; డేటా ఉన్న సంస్థల మొత్తం మాత్రమే చూపుతున్నాం.',
+  footL:'ఇది స్వతంత్ర ట్రాకర్. సంఖ్యలు ప్రతి విభాగంలో పేర్కొన్న మూలం నుంచి తీసుకున్నవి; అధికారిక ప్రకటనలకు భిన్నంగా లేదా ఆలస్యంగా ఉండవచ్చు. రాష్ట్ర ఎన్నికల సంఘంతో సరిచూసుకోండి.',
+  utilL:'స్వతంత్ర ఫలితాల ట్రాకర్ • ఆంధ్రప్రదేశ్ రాష్ట్ర ఎన్నికల సంఘంతో సంబంధం లేదు',utilR:'అధికారిక ఫలితాలు:',
+  kutamiAhead:'కూటమి ఆధిక్యంలో ఉన్న సంస్థలు',otherAhead:'ఆధిక్యంలో',
+  mapTitle:'కార్పొరేషన్ల మ్యాప్: పిన్ రంగు = గెలుపు + ఆధిక్యంలో ముందున్న కూటమి',
+  basisWL:'గెలుపు + ఆధిక్యం',basisD:'ప్రకటించినవి',notStated:'పేర్కొనలేదు'}
+};
+let LANG = 'en';
+const t = k => (T[LANG] && T[LANG][k]) || T.en[k] || k;
+
+/* ---------- built-in directory (names, ward counts, reservations from published sources) ---------- */
+const CORPS = [
+ ['gvmc','Greater Visakhapatnam (GVMC)','గ్రేటర్ విశాఖపట్నం','Visakhapatnam',120,'Women (General)',17.6868,83.2185],
+ ['vja','Vijayawada (VMC)','విజయవాడ','NTR',86,'Unreserved',16.5062,80.6480],
+ ['gtr','Guntur (GMC)','గుంటూరు','Guntur',76,'Women (General)',16.3067,80.4365],
+ ['nellore','Nellore (NMC)','నెల్లూరు','SPSR Nellore',72,'Unreserved',14.4426,79.9865],
+ ['knl','Kurnool (KMC)','కర్నూలు','Kurnool',68,'SC (Women)',15.8281,78.0373],
+ ['tpt','Tirupati (TMC)','తిరుపతి','Tirupati',66,'Unreserved',13.6288,79.4192],
+ ['kdp','Kadapa','కడప','YSR Kadapa',66,'Women (General)',14.4673,78.8242],
+ ['vzm','Vizianagaram','విజయనగరం','Vizianagaram',62,'Women (General)',18.1067,83.3956],
+ ['eluru','Eluru (EMC)','ఏలూరు','Eluru',62,'BC (General)',16.7107,81.0952],
+ ['atp','Anantapur','అనంతపురం','Anantapur',62,'BC (General)',14.6819,77.6006],
+ ['chittoor','Chittoor','చిత్తూరు','Chittoor',60,'BC (General)',13.2172,79.1003],
+ ['mpt','Machilipatnam','మచిలీపట్నం','Krishna',60,'BC (Women)',16.1875,81.1389],
+ ['ongole','Ongole (OMC)','ఒంగోలు','Prakasam',62,'Unreserved',15.5057,80.0499]
+].map(a => ({id:a[0],kind:'corp',en:a[1],te:a[2],district:a[3],wards:a[4],head:a[5],lat:a[6],lng:a[7]}));
+const MUNIS = [
+ ['narsipatnam','muni','Narsipatnam','నర్సీపట్నం','Anakapalli',40,'BC (Women)'],['yelamanchili','muni','Yelamanchili','యలమంచిలి','Anakapalli',32,'Women (General)'],
+ ['gooty','muni','Gooty','గుత్తి','Anantapur',32,'SC (Women)'],['guntakal','muni','Guntakal','గుంతకల్','Anantapur',48,'BC (Women)'],
+ ['kalyandurg','muni','Kalyandurg','కళ్యాణదుర్గం','Anantapur',32,'Women (General)'],['rayadurg','muni','Rayadurg','రాయదుర్గం','Anantapur',40,'Unreserved'],
+ ['tadipatri','muni','Tadipatri','తాడిపత్రి','Anantapur',48,'BC (General)'],['madanapalle','muni','Madanapalle','మదనపల్లె','Annamayya',48,'BC (General)'],
+ ['rayachoti','muni','Rayachoti','రాయచోటి','Annamayya',44,'BC (General)'],['chirala','muni','Chirala','చీరాల','Bapatla',44,'SC (Women)'],
+ ['repalle','muni','Repalle','రేపల్లె','Bapatla',36,'Women (General)'],['kuppam','muni','Kuppam','కుప్పం','Chittoor',32,'SC (General)'],
+ ['nagari','muni','Nagari','నగరి','Chittoor',40,'Unreserved'],['palamaner','muni','Palamaner','పలమనేరు','Chittoor',36,'Women (General)'],
+ ['punganur','muni','Punganur','పుంగనూరు','Chittoor',36,'BC (Women)'],['amalapuram','muni','Amalapuram','అమలాపురం','Konaseema',36,'Unreserved'],
+ ['mummidivaram','np','Mummidivaram','ముమ్మిడివరం','Konaseema',23,'BC (Women)'],['ramachandrapuram','muni','Ramachandrapuram','రామచంద్రపురం','Konaseema',32,'BC (General)'],
+ ['kovvur','muni','Kovvur','కొవ్వూరు','East Godavari',28,'Women (General)'],['mandapeta','muni','Mandapeta','మండపేట','East Godavari',36,'Unreserved'],
+ ['nidadavolu','muni','Nidadavolu','నిడదవోలు','East Godavari',32,'SC (Women)']
+].map(a => ({id:a[0],kind:a[1],en:a[2],te:a[3],district:a[4],wards:a[5],head:a[6]}));
 
 /* ---------- safe helpers (feed content is untrusted) ---------- */
 const $ = s => document.querySelector(s);
@@ -323,259 +851,340 @@ const num = v => (typeof v === 'number' && isFinite(v) && v >= 0) ? Math.floor(v
 const str = (s, n) => typeof s === 'string' ? s.slice(0, n) : '';
 const httpsUrl = u => (typeof u === 'string' && /^https:\/\//i.test(u)) ? u.slice(0, 400) : '';
 const isoOrNull = s => (typeof s === 'string' && !isNaN(Date.parse(s))) ? s : null;
-const partyOrNull = v => ORDER.indexOf(v) >= 0 ? v : null;
+const partyOrNull = v => PKEYS.indexOf(v) >= 0 ? v : null;
+const idOk = s => typeof s === 'string' && /^[a-z0-9_-]{2,40}$/.test(s);
 const fmt = n => n == null ? '—' : n.toLocaleString('en-IN');
-function cleanParties(p) {
-  const o = {}; if (!p || typeof p !== 'object') return o;
-  ORDER.forEach(k => { const v = num(p[k]); if (v != null) o[k] = v; });
-  return o;
+const pct = (n, d) => d ? (n / d * 100).toFixed(2) + '%' : '';
+const sumBy = (o, keys) => keys.reduce((a, k) => a + (o[k] || 0), 0);
+function cleanMap(p, keys) { const o = {}; if (!p || typeof p !== 'object') return o; keys.forEach(k => { const v = num(p[k]); if (v != null) o[k] = v; }); return o; }
+function cleanCand(c) {
+  if (!c || typeof c !== 'object') return null;
+  const name = str(c.name, 80).trim(); if (!name) return null;
+  const party = partyOrNull(c.party);
+  const alliance = AKEYS.indexOf(c.alliance) >= 0 ? c.alliance : (party ? alliOf(party) : null);
+  return {name:name, nameEn:str(c.nameEn, 80), nameTe:str(c.nameTe, 80), party:party, alliance:alliance,
+          status:CSTAT[c.status] ? c.status : 'CONTESTING', votes:num(c.votes), margin:num(c.margin), note:str(c.note, 160)};
 }
 function clean(j) {
   if (!j || typeof j !== 'object' || !Array.isArray(j.ulbs)) return null;
-  const out = {meta:{}, macro:{}, ulbs:{}, wards:{}};
+  const out = {meta:{}, macro:{}, ulbs:{}, heads:{}, wards:{}, bodies:[]};
   const m = j.meta || {};
-  out.meta = {kind:['official','media','manual'].indexOf(m.kind) >= 0 ? m.kind : 'media', source:str(m.source,240),
-              sourceUrl:httpsUrl(m.sourceUrl), publishedAt:isoOrNull(m.publishedAt), note:str(m.note,400)};
+  out.meta = {kind:['official','media','manual'].indexOf(m.kind) >= 0 ? m.kind : 'media', source:str(m.source, 240), sourceUrl:httpsUrl(m.sourceUrl), publishedAt:isoOrNull(m.publishedAt), note:str(m.note, 400)};
   const mc = j.macro || {};
-  out.macro = {bodiesTotal:num(mc.bodiesTotal), corporations:num(mc.corporations), municipalities:num(mc.municipalities),
-               totalWards:num(mc.totalWards), declaredWards:num(mc.declaredWards), parties:cleanParties(mc.parties)};
+  out.macro = {bodiesTotal:num(mc.bodiesTotal), corporations:num(mc.corporations), municipalities:num(mc.municipalities), totalWards:num(mc.totalWards),
+    declaredWards:num(mc.declaredWards), leadingWards:num(mc.leadingWards), pendingWards:num(mc.pendingWards),
+    corpLeading:num(mc.corpLeading), corpPending:num(mc.corpPending), muniWon:num(mc.muniWon), muniLeading:num(mc.muniLeading), muniPending:num(mc.muniPending),
+    alliances:cleanMap(mc.alliances, AKEYS), bodies:cleanMap(mc.bodies, ['NDA','YSRCP','OTH','PENDING']),
+    asOf:str(mc.asOf, 240), source:str(mc.source, 240), sourceUrl:httpsUrl(mc.sourceUrl), note:str(mc.note, 400), updatedAt:isoOrNull(mc.updatedAt)};
+  (Array.isArray(j.bodies) ? j.bodies : []).slice(0, 200).forEach(b => {
+    if (!b || !idOk(b.id) || !KIND[b.kind]) return; const en = str(b.en, 80).trim(); if (!en) return;
+    out.bodies.push({id:b.id, kind:b.kind, en:en, te:str(b.te, 80), district:str(b.district, 60) || null, wards:num(b.wards), head:str(b.head, 40) || null,
+      lat:(typeof b.lat === 'number' && isFinite(b.lat)) ? b.lat : null, lng:(typeof b.lng === 'number' && isFinite(b.lng)) ? b.lng : null});
+  });
   j.ulbs.forEach(u => {
-    if (!u || typeof u.id !== 'string') return;
-    out.ulbs[u.id] = {totalWards:num(u.totalWards), declared:num(u.declared), parties:cleanParties(u.parties),
-      mayorLead:partyOrNull(u.mayorLead), updatedAt:isoOrNull(u.updatedAt), source:str(u.source,240), sourceUrl:httpsUrl(u.sourceUrl)};
+    if (!u || !idOk(u.id)) return;
+    out.ulbs[u.id] = {totalWards:num(u.totalWards), declared:num(u.declared), basis:u.basis === 'declared+leading' ? 'declared+leading' : 'declared',
+      parties:cleanMap(u.parties, PKEYS), alliances:cleanMap(u.alliances, AKEYS), mayorLead:partyOrNull(u.mayorLead), mayorAlliance:AKEYS.indexOf(u.mayorAlliance) >= 0 ? u.mayorAlliance : null,
+      updatedAt:isoOrNull(u.updatedAt), source:str(u.source, 240), sourceUrl:httpsUrl(u.sourceUrl), note:str(u.note, 240)};
+  });
+  if (j.heads && typeof j.heads === 'object') Object.keys(j.heads).forEach(id => {
+    if (!idOk(id) || !Array.isArray(j.heads[id])) return;
+    out.heads[id] = j.heads[id].slice(0, 60).map(cleanCand).filter(Boolean);
   });
   if (j.wards && typeof j.wards === 'object') Object.keys(j.wards).forEach(id => {
-    const a = j.wards[id]; if (!Array.isArray(a)) return;
+    const a = j.wards[id]; if (!idOk(id) || !Array.isArray(a)) return;
     out.wards[id] = a.slice(0, 600).map(w => {
       if (!w) return null; const no = num(w.no); if (no == null) return null;
-      const vt = {}; if (w.votes && typeof w.votes === 'object') ORDER.forEach(k => { const v = num(w.votes[k]); if (v != null) vt[k] = v; });
-      return {no:no, party:partyOrNull(w.party), status:['DECLARED','COUNTING','PENDING'].indexOf(w.status) >= 0 ? w.status : 'PENDING',
-              votes:vt, margin:num(w.margin)};
+      return {no:no, party:partyOrNull(w.party), status:['DECLARED','COUNTING','PENDING'].indexOf(w.status) >= 0 ? w.status : 'PENDING', margin:num(w.margin),
+              votes:cleanMap(w.votes, PKEYS), candidates:(Array.isArray(w.candidates) ? w.candidates.slice(0, 40) : []).map(cleanCand).filter(Boolean)};
     }).filter(Boolean);
   });
   return out;
 }
 
 /* ---------- state ---------- */
-let DATA = clean(SEED) || {meta:{}, macro:{}, ulbs:{}, wards:{}};
-let selId = 'gvmc', selWard = null, mode = 'MAP', feedOk = null, lastCheck = null, lastSig = '', map = null, pins = null;
+let DATA = clean(SEED) || {meta:{}, macro:{}, ulbs:{}, heads:{}, wards:{}, bodies:[]};
+let TAB = 'corp', MODAL = null, MTAB = 'overview', SELW = null, feedOk = null, lastCheck = null, lastSig = '';
+let Q = {muni:'', dist:'', kind:'', cand:''}, map = null, pins = null;
+
+function BODIES() {
+  const m = new Map(); CORPS.concat(MUNIS).forEach(b => m.set(b.id, b));
+  DATA.bodies.forEach(b => { const o = m.get(b.id) || {}; m.set(b.id, Object.assign({}, o, b, {te:b.te || o.te || '', district:b.district || o.district || null, wards:b.wards != null ? b.wards : (o.wards != null ? o.wards : null), head:b.head || o.head || null})); });
+  return [...m.values()];
+}
+const bodyById = id => BODIES().find(b => b.id === id);
+const bn = b => (LANG === 'te' && b.te) ? b.te : b.en;
+const cn = c => LANG === 'te' ? (c.nameTe || c.name) : (c.nameEn || c.name);
+const pn = k => k ? PARTY[k][LANG] : '';
+const initials = s => { const w = String(s).trim().split(/\s+/); return (w[0] ? w[0][0] : '?').toUpperCase(); };
+const colorOfCand = c => c.party ? PARTY[c.party].c : (c.alliance ? ALL[c.alliance].c : '#94a3b8');
+const textOfCand = c => c.party ? PARTY[c.party].t : (c.alliance ? ALL[c.alliance].t : '#fff');
 
 /* ---------- derived values ---------- */
-function view(r) {
-  const f = DATA.ulbs[r.id] || {}, p = f.parties || {}, w = {}; let sum = 0;
-  ORDER.forEach(k => { w[k] = p[k] || 0; sum += w[k]; });
-  const hasP = Object.keys(p).length > 0;
-  const declared = f.declared != null ? f.declared : (hasP ? sum : null);
-  const total = f.totalWards != null ? f.totalWards : null;
-  const nda = NDA.reduce((a, k) => a + w[k], 0);
-  let lead = null, mx = 0, tie = false;
-  ORDER.forEach(k => { if (w[k] > mx) { mx = w[k]; lead = k; tie = false; } else if (w[k] === mx && mx > 0) tie = true; });
-  return {r:r, f:f, w:w, sum:sum, declared:declared, total:total, nda:nda, ysr:w.YSRCP, oth:Math.max(0, sum - nda - w.YSRCP),
-          lead:tie ? null : lead, tie:tie, mayor:f.mayorLead || null, majority:total ? Math.floor(total / 2) + 1 : null, hasP:hasP};
+function view(b) {
+  const f = DATA.ulbs[b.id] || {}, p = f.parties || {}, al = f.alliances || {};
+  const hasP = Object.keys(p).length > 0, hasA = Object.keys(al).length > 0;
+  let nda = 0, ysr = 0, oth = 0;
+  if (hasP) { nda = p.TDP + 0 || 0; nda = sumBy(p, ['TDP','JSP','BJP']); ysr = p.YSRCP || 0; oth = sumBy(p, ['CPM','INC','IND','OTH']); }
+  else if (hasA) { nda = al.NDA || 0; ysr = al.YSRCP || 0; oth = al.OTH || 0; }
+  const counted = nda + ysr + oth, total = f.totalWards != null ? f.totalWards : (b.wards != null ? b.wards : null);
+  const has = hasP || hasA;
+  const mx = Math.max(nda, ysr, oth); let lead = null;
+  if (has && mx > 0) { const top = [['NDA', nda], ['YSRCP', ysr], ['OTH', oth]].filter(x => x[1] === mx); lead = top.length === 1 ? top[0][0] : null; }
+  return {b:b, f:f, p:p, nda:nda, ysr:ysr, oth:oth, counted:counted, total:total, has:has, lead:lead, basis:f.basis || 'declared',
+          majority:total ? Math.floor(total / 2) + 1 : null};
 }
-function macro() {
+function headsOf(id) { return DATA.heads[id] || []; }
+function headLeader(id) {
+  const hs = headsOf(id); let w = hs.find(c => c.status === 'WON'); if (w) return w;
+  const l = hs.filter(c => c.status === 'LEADING'); if (l.length) return l.sort((a, c) => (c.votes || 0) - (a.votes || 0))[0];
+  return null;
+}
+function headAlliance(b) { const L = headLeader(b.id); if (L && L.alliance) return L.alliance; const f = DATA.ulbs[b.id] || {}; return f.mayorAlliance || (f.mayorLead ? alliOf(f.mayorLead) : null); }
+function bodyStatus(v) {
+  const L = headLeader(v.b.id);
+  if (v.total && v.counted >= v.total && v.has) return {k:'won', s:t('allDecl')};
+  if (v.has && v.counted > 0) return {k:'lead', s:t('counting')};
+  if (L && L.status === 'WON') return {k:'won', s:t('headDecl')};
+  if (L || headAlliance(v.b)) return {k:'lead', s:t('leading')};
+  return {k:'cont', s:t('awaiting')};
+}
+function macroView() {
   const m = DATA.macro || {};
-  if (m.parties && Object.keys(m.parties).length && m.declaredWards != null) {
-    const w = {}; ORDER.forEach(k => w[k] = m.parties[k] || 0);
-    return {scope:'state', w:w, declared:m.declaredWards, total:m.totalWards};
-  }
-  const w = {}; ORDER.forEach(k => w[k] = 0); let declared = 0, total = 0, allTotal = true;
-  REG.forEach(r => { const v = view(r); ORDER.forEach(k => w[k] += v.w[k]); declared += v.declared || 0; if (v.total == null) allTotal = false; else total += v.total; });
-  return {scope:'corp', w:w, declared:declared, total:allTotal ? total : null};
+  if (m.alliances && Object.keys(m.alliances).length && m.totalWards != null) return {scope:'state', m:m, al:{NDA:m.alliances.NDA || 0, YSRCP:m.alliances.YSRCP || 0, OTH:m.alliances.OTH || 0}, total:m.totalWards};
+  const al = {NDA:0, YSRCP:0, OTH:0}; let n = 0;
+  BODIES().forEach(b => { const v = view(b); if (v.has) { n++; al.NDA += v.nda; al.YSRCP += v.ysr; al.OTH += v.oth; } });
+  return {scope:'partial', m:m, al:al, total:null, n:n};
 }
-function mayorTally() {
-  const t = {nda:0, ysr:0, other:0, wait:0};
-  REG.forEach(r => { const m = (DATA.ulbs[r.id] || {}).mayorLead; if (!m) t.wait++; else if (NDA.indexOf(m) >= 0) t.nda++; else if (m === 'YSRCP') t.ysr++; else t.other++; });
-  return t;
-}
-function pinColor(v) { return v.lead ? P[v.lead].c : (v.declared > 0 ? '#94a3b8' : (v.mayor ? P[v.mayor].c : '#94a3b8')); }
+function ageMin(iso) { const x = Date.parse(iso); return isNaN(x) ? null : Math.max(0, (Date.now() - x) / 60000); }
+function agoText(mi) { if (mi == null) return ''; if (mi < 1) return 'just now'; if (mi < 60) return Math.round(mi) + ' min ago'; if (mi < 1440) return Math.floor(mi / 60) + ' h ' + Math.round(mi % 60) + ' min ago'; return Math.floor(mi / 1440) + ' d ago'; }
 function istTime(iso) { try { return new Intl.DateTimeFormat('en-IN', {timeZone:'Asia/Kolkata', hour:'2-digit', minute:'2-digit', hour12:true, day:'numeric', month:'short'}).format(new Date(iso)) + ' IST'; } catch (e) { return iso; } }
-function ageMin(iso) { const t = Date.parse(iso); return isNaN(t) ? null : Math.max(0, (Date.now() - t) / 60000); }
-function agoText(m) { if (m == null) return ''; if (m < 1) return 'just now'; if (m < 60) return Math.round(m) + ' min ago'; if (m < 1440) return Math.floor(m / 60) + ' h ' + Math.round(m % 60) + ' min ago'; return Math.floor(m / 1440) + ' d ago'; }
 
-/* ---------- rendering ---------- */
-function renderBanner() {
-  const M = macro(), mt = mayorTally();
-  const nda = NDA.reduce((a, k) => a + M.w[k], 0), ysr = M.w.YSRCP;
-  const oth = ORDER.filter(k => NDA.indexOf(k) < 0 && k !== 'YSRCP').reduce((a, k) => a + M.w[k], 0);
-  $('#ndaBig').textContent = M.declared > 0 ? fmt(nda) : '—';
-  $('#ndaSub').textContent = M.declared > 0 ? 'TDP ' + fmt(M.w.TDP) + ' · JSP ' + fmt(M.w.JSP) + ' · BJP ' + fmt(M.w.BJP) : 'No declared wards in the feed yet';
-  $('#ysrBig').textContent = M.declared > 0 ? fmt(ysr) : '—';
-  $('#ysrSub').textContent = M.declared > 0 ? 'Others ' + fmt(oth) : '';
-  $('#mayorLine').textContent = 'NDA leading ' + mt.nda + ' · YSRCP ' + mt.ysr + ' · Other ' + mt.other + ' · Awaiting ' + mt.wait;
-  $('#declLine').textContent = M.declared > 0 ? 'Declared wards: ' + fmt(M.declared) + (M.total ? ' of ' + fmt(M.total) : '') : '';
-  const bar = $('#bar'); let h = '';
-  if (M.declared > 0) {
-    const segs = [['TDP', M.w.TDP], ['JSP', M.w.JSP], ['BJP', M.w.BJP], ['YSRCP', M.w.YSRCP], ['OTH', oth]];
-    const tot = segs.reduce((a, s) => a + s[1], 0) || 1;
-    segs.forEach(s => { if (s[1] > 0) h += '<div class="seg" style="width:' + (s[1] / tot * 100).toFixed(2) + '%;background:' + P[s[0]].c + ';color:' + P[s[0]].t + '">' + (s[1] / tot > .05 ? esc(P[s[0]].n) + ' ' + s[1] : '') + '</div>'; });
-  } else h = '<div class="empty">No declared results in the feed yet</div>';
-  bar.innerHTML = h;
-  $('#scope').textContent = M.scope === 'state'
-    ? 'Scope: statewide totals as supplied by the feed.'
-    : 'Scope: the 13 municipal corporations only, summed from the per-corporation figures below. Statewide totals for all urban bodies are not in the feed yet.';
-}
-function renderList() {
-  const el = $('#list'); let h = '', k = 0;
-  REG.forEach(r => {
-    const v = view(r); if (v.declared > 0) k++;
-    const right = v.declared > 0 ? 'NDA ' + v.nda + ' · YSRCP ' + v.ysr + '<br><span class="s">' + v.declared + (v.total ? '/' + v.total : '') + ' declared</span>'
-      : (v.mayor ? '<span class="s">Mayor lead:</span> <span style="color:' + (v.mayor === 'TDP' ? '#a16207' : P[v.mayor].c) + '">' + esc(P[v.mayor].n) + '</span>' : '<span class="s">Awaiting results</span>');
-    h += '<div class="row' + (r.id === selId ? ' active' : '') + '" data-id="' + r.id + '"><div><h5>' + esc(r.name) + '</h5><span class="s">' + esc(r.district) + (v.total ? ' • ' + v.total + ' wards' : '') + '</span></div><div class="r">' + right + '</div></div>';
-  });
-  el.innerHTML = h; $('#listCount').textContent = k + ' of 13 with ward results';
-  el.querySelectorAll('.row').forEach(n => n.onclick = () => select(n.dataset.id, true));
-}
-function renderPins() {
-  if (!map || typeof L === 'undefined') return;
-  if (pins) pins.clearLayers(); else pins = L.layerGroup().addTo(map);
-  REG.forEach(r => {
-    const v = view(r), has = v.declared > 0;
-    const html = '<div class="pin' + (r.id === selId ? ' sel' : '') + '" style="--pc:' + pinColor(v) + '"><i></i><span>' + esc(r.short) + '</span><b class="' + (has ? '' : 'none') + '">' + (has ? 'NDA ' + v.nda + '/' + v.declared : '—') + '</b></div>';
-    const mk = L.marker([r.lat, r.lng], {icon:L.divIcon({html:html, className:'', iconSize:[0, 0]})});
-    const tip = '<div style="min-width:170px"><div style="font-weight:800;font-size:13px">' + esc(r.name) + '</div><div style="font-size:11px;color:#cbd5e1;margin-bottom:4px">' + esc(r.district) + '</div>' +
-      (has ? '<div style="font-size:11px">Declared ' + v.declared + (v.total ? ' of ' + v.total : '') + '<br>NDA ' + v.nda + ' · YSRCP ' + v.ysr + ' · Others ' + v.oth + '</div>' : '<div style="font-size:11px;color:#94a3b8">No ward results in the feed yet</div>') + '</div>';
-    mk.bindTooltip(tip, {direction:'top', offset:[0, -12], className:'tip'});
-    mk.on('click', () => select(r.id, false)); mk.addTo(pins);
-  });
-}
-function renderDetail() {
-  const r = REG.find(x => x.id === selId), v = view(r), f = v.f;
-  const b = $('#detBadge');
-  let bt = 'AWAITING DATA', bc = 'st n';
-  if (v.declared != null && v.declared > 0) { if (v.total && v.declared >= v.total) { bt = 'ALL DECLARED'; bc = 'st d'; } else { bt = 'COUNTING'; bc = 'st c'; } }
-  else if (v.mayor) { bt = 'MAYOR LEAD ONLY'; bc = 'st c'; }
-  b.textContent = bt; b.className = bc;
-  let h = '<h3>' + esc(r.name) + '</h3><div class="meta">' + esc(r.district) + (v.total ? ' • ' + v.total + ' divisions' : ' • division count not yet confirmed') + '</div>';
-  if (v.declared > 0) {
-    h += '<div class="pl"><span><b>Declared divisions</b></span><b class="v">' + v.declared + (v.total ? ' / ' + v.total : '') + '</b></div>';
-    if (v.total) h += '<div class="track" style="margin-bottom:14px"><div class="fill" style="width:' + Math.min(100, v.declared / v.total * 100).toFixed(1) + '%;background:#0e2a47"></div></div>';
-    ORDER.forEach(k => {
-      if (v.w[k] > 0 || ['TDP', 'JSP', 'BJP', 'YSRCP'].indexOf(k) >= 0) {
-        const pct = v.declared ? v.w[k] / v.declared * 100 : 0;
-        h += '<div class="pr"><div class="pl"><span><b>' + esc(P[k].n) + '</b></span><span class="v mono" style="font-weight:700">' + v.w[k] + ' (' + pct.toFixed(0) + '%)</span></div><div class="track"><div class="fill" style="width:' + pct.toFixed(1) + '%;background:' + P[k].c + '"></div></div></div>';
-      }
-    });
-    if (v.sum !== v.declared) h += '<div class="empty-note">Party figures add up to ' + v.sum + ' while declared divisions are ' + v.declared + '. Remaining divisions are not attributed in the feed.</div>';
-    if (v.majority) h += '<div class="kv" style="margin-top:6px;padding-top:8px">Majority mark: <strong>' + v.majority + '</strong>. NDA needs <strong>' + Math.max(0, v.majority - v.nda) + '</strong> more declared divisions.</div>';
-  } else {
-    h += '<div class="empty-note">No division-level results have been published for this corporation in the feed yet.</div>';
-  }
-  h += '<div class="kv"><div>Mayor post: <strong>' + (v.mayor ? esc(P[v.mayor].n) + ' leading (not final)' : 'not yet reported') + '</strong></div>';
-  h += '<div>Last updated: <strong>' + (f.updatedAt ? istTime(f.updatedAt) + ' (' + agoText(ageMin(f.updatedAt)) + ')' : 'no timestamp') + '</strong></div>';
-  const src = f.source || ''; const u = f.sourceUrl || '';
-  h += '<div>Source: ' + (src ? (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">' + esc(src) + '</a>' : '<strong>' + esc(src) + '</strong>') : '<strong>none supplied</strong>') + '</div></div>';
-  const ws = DATA.wards[selId];
-  if (ws && ws.length) {
-    const w = selWard != null ? ws.find(x => x.no === selWard) : null;
-    h += '<div class="kv"><strong>Division ' + (w ? w.no : '—') + '</strong>';
-    if (w) {
-      h += ' &mdash; ' + esc(w.status.toLowerCase()) + (w.party ? ' &bull; ' + esc(P[w.party].n) : '');
-      const keys = Object.keys(w.votes);
-      if (keys.length) { h += '<br>'; keys.forEach(k => h += esc(P[k].n) + ' ' + fmt(w.votes[k]) + ' &nbsp; '); } else h += '<br>Vote counts not published.';
-      if (w.margin != null) h += '<br>Margin: ' + fmt(w.margin);
-    } else h += '<br>Select a division in the Ward divisions tab.';
-    h += '</div>';
-  }
-  $('#det').innerHTML = h;
-}
-function renderWards() {
-  const grid = $('#wards'), msg = $('#wmsg'); if (mode !== 'GRID') return;
-  const r = REG.find(x => x.id === selId), v = view(r), ws = DATA.wards[selId] || [];
-  if (!ws.length) {
-    grid.style.display = 'none'; msg.style.display = 'block';
-    msg.innerHTML = '<b>Division-level results are not available for ' + esc(r.name) + ' yet.</b><br>The current feed only carries party totals' + (v.declared > 0 ? ' (' + v.declared + ' divisions declared)' : '') + '. Individual division results appear here once the data source publishes them. See the panel on the right for the totals.';
-    return;
-  }
-  msg.style.display = 'none'; grid.style.display = 'grid';
-  const by = {}; ws.forEach(w => by[w.no] = w); const n = Math.max(v.total || 0, ...ws.map(w => w.no)); let h = '';
-  for (let i = 1; i <= n; i++) {
-    const w = by[i];
-    if (!w || w.status === 'PENDING') h += '<div class="wb pend"><div class="n">W-' + i + '</div><div class="p">—</div></div>';
-    else h += '<div class="wb' + (selWard === i ? ' on' : '') + '" data-n="' + i + '"' + (w.status === 'COUNTING' ? ' style="border-style:dashed"' : '') + '><div class="n">W-' + i + '</div><div class="p" style="color:' + (w.party ? P[w.party].c : '#64748b') + '">' + (w.party ? esc(P[w.party].n) : esc(w.status)) + '</div></div>';
-  }
-  grid.innerHTML = h;
-  grid.querySelectorAll('.wb[data-n]').forEach(n => n.onclick = () => { selWard = +n.dataset.n; renderWards(); renderDetail(); });
+/* ---------- rendering: header, hero, alliance cards ---------- */
+function renderHero() {
+  const M = macroView(), m = M.m;
+  $('#hTitle').textContent = t('title'); $('#hSub').textContent = t('sub');
+  $('#utilL').textContent = t('utilL'); $('#utilR').textContent = t('utilR');
+  $('#heroKick').textContent = t('kick') + (m.bodiesTotal ? ' · ' + m.bodiesTotal + ' ' + t('bodies') : '');
+  const bo = m.bodies || {};
+  let head = '';
+  if (M.scope === 'state' && bo.NDA != null) {
+    const top = AKEYS.slice().sort((a, c) => (bo[c] || 0) - (bo[a] || 0))[0];
+    head = (top === 'NDA' ? t('kutamiAhead') : (LANG === 'te' ? ALL[top].shTe : ALL[top].sh) + ' ' + t('otherAhead')) + ' ' + (bo[top] || 0) + (m.bodiesTotal ? ' ' + t('of') + ' ' + m.bodiesTotal : '');
+  } else head = t('title');
+  $('#heroHead').textContent = head;
+  $('#heroLead').textContent = (m.bodiesTotal ? m.bodiesTotal + ' ' + t('bodies') + ' (' + (m.corporations || 13) + ' ' + t('corps') + ', ' + (m.municipalities || '—') + ' ' + t('munis') + ')' : '') + (m.totalWards ? ' · ' + fmt(m.totalWards) + ' ' + t('wards') : '');
+  let as = '';
+  if (M.scope === 'state') as = (m.asOf ? m.asOf + '. ' : '') + (m.source ? t('source') + ': ' + m.source + '.' : '');
+  else as = t('scopePartial');
+  $('#heroAsOf').textContent = as;
+  const cl = m.corpLeading, cp = m.corpPending, mw = m.muniWon, ml = m.muniLeading, mp = m.muniPending;
+  const sCorp = (cl != null ? cl + ' ' + t('leading') : '') + (cp != null ? ' · ' + cp + ' ' + t('pending') : '');
+  const sMuni = (mw != null ? mw + ' ' + t('won') : '') + (ml != null ? ' · ' + ml + ' ' + t('leading') : '') + (mp != null ? ' · ' + mp + ' ' + t('pending') : '');
+  const decl = m.declaredWards, ld = m.leadingWards, pd = m.pendingWards;
+  const sAll = decl != null ? fmt(decl) + ' ' + t('declared') + (m.totalWards ? ' (' + (decl / m.totalWards * 100).toFixed(1) + '%)' : '') + (ld != null ? ' · ' + fmt(ld) + ' ' + t('leading') : '') + (pd != null ? ' · ' + fmt(pd) + ' ' + t('pending') : '') : '—';
+  const sec = (m.corporations && m.totalWards) ? '' : '';
+  $('#stats').innerHTML =
+    '<div class="stat"><div class="l">' + esc(t('corpMayors')) + '</div><div class="n">' + (m.corporations != null ? m.corporations : '—') + '</div><div class="s">' + esc(sCorp || '—') + '</div></div>' +
+    '<div class="stat"><div class="l">' + esc(t('muniChairs')) + '</div><div class="n">' + (m.municipalities != null ? m.municipalities : '—') + '</div><div class="s">' + esc(sMuni || '—') + '</div></div>' +
+    '<div class="stat"><div class="l">' + esc(t('allWards')) + '</div><div class="n">' + (m.totalWards != null ? fmt(m.totalWards) : '—') + '</div><div class="s">' + esc(sAll) + '</div>' +
+    (m.totalWards && decl != null ? '<div class="pbar"><i style="width:' + Math.min(100, decl / m.totalWards * 100).toFixed(1) + '%"></i></div>' : '') + '</div>' + sec;
+  /* alliance cards */
+  const tot = M.total;
+  $('#alli').innerHTML = AKEYS.map(k => {
+    const a = ALL[k], w = M.al[k] || 0, nb = bo[k];
+    return '<div class="ac" style="--c:' + a.c + '"><div class="t">' + esc(LANG === 'te' ? a.shTe : a.sh) + '</div><div class="t2">' + esc(LANG === 'te' ? a.te : a.en) + '</div>' +
+      '<div class="big">' + fmt(w) + (tot ? '<span style="font-size:.9rem;color:#64748b"> / ' + fmt(tot) + '</span>' : '') + '</div>' +
+      '<div class="sub">' + esc(t('wonLead')) + (tot ? ' · ' + pct(w, tot) : '') + '</div>' +
+      (tot ? '<div class="track"><i style="width:' + Math.min(100, w / tot * 100).toFixed(1) + '%"></i></div>' : '') +
+      '<div class="row"><span>' + esc(t('bodies')) + '</span><b class="mono">' + (nb != null ? nb : '—') + '</b></div></div>';
+  }).join('');
 }
 function renderStatus() {
-  const m = DATA.meta || {}, badge = $('#badge'), bt = $('#badgeText');
-  const age = m.publishedAt ? ageMin(m.publishedAt) : null;
-  let cls = 'stale', txt = 'No data timestamp';
-  if (feedOk === false) { cls = 'off'; txt = 'FEED OFFLINE' + (age != null ? ' · showing data from ' + istTime(m.publishedAt) : ''); }
-  else if (age != null) {
-    if (age <= FRESH_MIN) { cls = 'fresh'; txt = 'LIVE · updated ' + agoText(age); }
-    else if (age <= STALE_MIN) { cls = 'aging'; txt = 'UPDATED ' + agoText(age); }
-    else { cls = 'stale'; txt = 'SNAPSHOT · ' + istTime(m.publishedAt); }
-  }
+  const m = DATA.meta || {}, badge = $('#badge'), bt = $('#badgeText'), age = m.publishedAt ? ageMin(m.publishedAt) : null;
+  let cls = 'stale', txt = t('noTs');
+  if (feedOk === false) { cls = 'off'; txt = 'FEED OFFLINE' + (age != null ? ' · ' + istTime(m.publishedAt) : ''); }
+  else if (age != null) { if (age <= FRESH_MIN) { cls = 'fresh'; txt = 'LIVE · ' + agoText(age); } else if (age <= STALE_MIN) { cls = 'aging'; txt = agoText(age); } else { cls = 'stale'; txt = 'SNAPSHOT · ' + istTime(m.publishedAt); } }
   badge.className = 'badge ' + cls; bt.textContent = txt;
-  const kt = $('#kindTag'); kt.textContent = m.kind === 'official' ? 'OFFICIAL FEED' : (m.kind === 'manual' ? 'MANUALLY ENTERED · UNOFFICIAL' : 'MEDIA-REPORTED · UNOFFICIAL');
-  kt.className = 'tag' + (m.kind === 'official' ? ' official' : '');
-  let r = lastCheck ? 'Feed checked ' + new Date(lastCheck).toLocaleTimeString('en-IN') : 'Feed not checked yet';
-  if (m.publishedAt) r += ' · data published ' + istTime(m.publishedAt);
+  const kt = $('#kindTag'); kt.textContent = m.kind === 'official' ? 'OFFICIAL FEED' : (m.kind === 'manual' ? 'MANUALLY ENTERED · UNOFFICIAL' : 'MEDIA-REPORTED · UNOFFICIAL'); kt.className = 'tag' + (m.kind === 'official' ? ' official' : '');
+  let r = lastCheck ? 'Feed checked ' + new Date(lastCheck).toLocaleTimeString('en-IN') : 'Feed not checked yet'; if (m.publishedAt) r += ' · data published ' + istTime(m.publishedAt);
   $('#footR').textContent = r;
-  const src = m.source ? 'Source: ' + m.source : '';
-  const L = $('#footL'); L.textContent = 'This is an independent tracker. Figures are copied from the source named in each panel and may lag or differ from official declarations. Always confirm with the State Election Commission. ' + src;
+  $('#footL').textContent = t('footL') + (m.source ? ' ' + t('source') + ': ' + m.source : '') + (m.note ? ' ' + m.note : '');
 }
-function renderAll() { renderBanner(); renderList(); renderPins(); renderDetail(); renderWards(); renderStatus(); }
 
-/* ---------- interaction ---------- */
-function select(id, fly) {
-  selId = id; selWard = null; renderList(); renderPins(); renderDetail(); renderWards();
-  const r = REG.find(x => x.id === id);
-  if (fly && map && mode === 'MAP') map.flyTo([r.lat, r.lng], 9.5, {duration:.7});
+/* ---------- rendering: tabs and views ---------- */
+function renderTabs() {
+  const tabs = [['corp', t('tabCorp')], ['muni', t('tabMuni')], ['win', t('tabWin')], ['cand', t('tabSearch')], ['map', t('tabMap')]];
+  $('#tabs').innerHTML = tabs.map(x => '<button type="button" data-tab="' + x[0] + '" class="' + (TAB === x[0] ? 'on' : '') + '">' + esc(x[1]) + '</button>').join('');
 }
-function setMode(m) {
-  mode = m; $('#tabMap').classList.toggle('on', m === 'MAP'); $('#tabGrid').classList.toggle('on', m === 'GRID');
-  const r = REG.find(x => x.id === selId);
-  if (m === 'MAP') {
-    $('#mapWrap').style.display = 'block'; $('#wards').style.display = 'none'; $('#wmsg').style.display = 'none';
-    $('#mapTitle').textContent = 'Andhra Pradesh — 13 Municipal Corporations'; $('#mapSub').textContent = 'Click a corporation pin to see its published results';
-    if (map) setTimeout(() => map.invalidateSize(), 80);
-  } else {
-    $('#mapWrap').style.display = 'none'; $('#mapTitle').textContent = r.name; $('#mapSub').textContent = r.district + ' • division-level results';
-    renderWards();
+function altBar(v) {
+  const tot = v.total || v.counted || 1, pend = v.total ? Math.max(0, v.total - v.counted) : 0;
+  const seg = (n, c) => n > 0 ? '<i style="width:' + (n / tot * 100).toFixed(2) + '%;background:' + c + '"></i>' : '';
+  return '<div class="abar">' + seg(v.nda, ALL.NDA.c) + seg(v.ysr, ALL.YSRCP.c) + seg(v.oth, ALL.OTH.c) + seg(pend, 'var(--pend)') + '</div>';
+}
+function altLegend(v) {
+  const pend = v.total ? Math.max(0, v.total - v.counted) : null;
+  return '<div class="legend2"><span><u style="background:' + ALL.NDA.c + '"></u>' + esc(LANG === 'te' ? ALL.NDA.shTe : ALL.NDA.sh) + ' <b>' + v.nda + '</b></span><span><u style="background:' + ALL.YSRCP.c + '"></u>' + esc(LANG === 'te' ? ALL.YSRCP.shTe : ALL.YSRCP.sh) + ' <b>' + v.ysr + '</b></span><span><u style="background:' + ALL.OTH.c + '"></u>' + esc(LANG === 'te' ? ALL.OTH.shTe : ALL.OTH.sh) + ' <b>' + v.oth + '</b></span>' + (pend != null ? '<span><u style="background:var(--pend)"></u>' + esc(t('pending')) + ' <b>' + pend + '</b></span>' : '') + '</div>';
+}
+function benchText(v) {
+  if (!v.has || !v.majority) return '';
+  const basis = v.basis === 'declared+leading' ? t('basisWL') : t('basisD');
+  const need = Math.max(0, v.majority - v.nda);
+  return '<div class="bench">' + esc(t('majMark')) + ': <b>' + v.majority + '</b> / ' + v.total + ' · ' + (v.nda >= v.majority ? '✓ ' + esc(t('majority')) + ' (' + esc(LANG === 'te' ? ALL.NDA.shTe : ALL.NDA.sh) + ')' : esc(LANG === 'te' ? ALL.NDA.shTe : ALL.NDA.sh) + ' ' + esc(t('needs')) + ' <b>' + need + '</b> ' + esc(t('more'))) + ' <span style="color:#94a3b8">(' + esc(basis) + ')</span></div>';
+}
+function headBlock(b) {
+  const role = KIND[b.kind].head[LANG], L = headLeader(b.id), hs = headsOf(b.id);
+  if (L) {
+    const cs = CSTAT[L.status];
+    return '<div class="mayor"><div class="av" style="background:' + colorOfCand(L) + ';color:' + textOfCand(L) + '">' + esc(initials(cn(L))) + '</div><div style="min-width:0"><div class="k">' + esc(role) + ' · <span class="st ' + cs.cls + '">' + esc(cs[LANG]) + '</span></div><div class="nm">' + esc(cn(L)) + '</div><span class="pt" style="background:' + colorOfCand(L) + ';color:' + textOfCand(L) + '">' + esc(L.party ? pn(L.party) : (L.alliance ? (LANG === 'te' ? ALL[L.alliance].shTe : ALL[L.alliance].sh) : '')) + '</span></div></div>';
   }
+  const al = headAlliance(b);
+  return '<div class="mayor"><div class="av" style="background:' + (al ? ALL[al].c : '#94a3b8') + ';color:' + (al ? ALL[al].t : '#fff') + '">?</div><div><div class="k">' + esc(role) + '</div><div class="nm" style="font-weight:700;font-size:.84rem;color:#475569">' +
+    esc(al ? (LANG === 'te' ? ALL[al].shTe : ALL[al].sh) + ' · ' + t('leading') : t('noHead')) + (hs.length ? ' · ' + hs.length + ' ' + esc(t('announced')) : '') + '</div></div></div>';
 }
-$('#tabMap').onclick = () => setMode('MAP'); $('#tabGrid').onclick = () => setMode('GRID');
-document.querySelectorAll('.zb').forEach(b => b.onclick = () => {
-  if (!map) return; const z = b.dataset.z;
-  if (z === 'ALL') map.flyTo([15.9, 80.4], 6.5, {duration:.8}); if (z === 'N') map.flyTo([17.95, 83.3], 8.5, {duration:.8});
-  if (z === 'C') map.flyTo([16.1, 80.7], 7.8, {duration:.8}); if (z === 'R') map.flyTo([14.4, 78.6], 7.6, {duration:.8});
-});
+function corpCard(b) {
+  const v = view(b), s = bodyStatus(v), al = v.lead || headAlliance(b);
+  return '<div class="cc" style="--pc:' + (al ? ALL[al].c : 'var(--pend)') + '"><div class="top"><div><h3>' + esc(bn(b)) + '</h3><div class="meta">' + esc(b.district || '') + ' · ' + (v.total ? v.total + ' ' + esc(t('divs')) : '') + (b.head ? ' · ' + esc(t('reservation')) + ': ' + esc(b.head) : '') + '</div></div><span class="st ' + s.k + '">' + esc(s.s) + '</span></div>' +
+    headBlock(b) + (v.has ? altBar(v) + altLegend(v) + benchText(v) : '<div class="bench" style="color:#94a3b8">' + esc(t('awaiting')) + '</div>') +
+    '<div class="btns"><button class="btn" type="button" data-open="' + esc(b.id) + '">' + esc(t('contestants')) + '</button></div></div>';
+}
+function viewCorp() { return '<div class="cgrid">' + BODIES().filter(b => b.kind === 'corp').map(corpCard).join('') + '</div>'; }
+function viewMuni() {
+  const all = BODIES().filter(b => b.kind !== 'corp'), dists = [...new Set(all.map(b => b.district).filter(Boolean))].sort();
+  const q = Q.muni.toLowerCase();
+  const rows = all.filter(b => (!Q.kind || b.kind === Q.kind) && (!Q.dist || (Q.dist === '__' ? !b.district : b.district === Q.dist)) && (!q || (b.en + ' ' + (b.te || '')).toLowerCase().indexOf(q) >= 0 || headsOf(b.id).some(c => (c.name + ' ' + (c.nameEn || '')).toLowerCase().indexOf(q) >= 0)));
+  let h = '<div class="note">' + esc(t('partialBodies')) + ' <b>' + all.length + '</b> ' + esc(t('ofBodies')) + '</div>';
+  h += '<div class="tools"><input id="qMuni" value="' + esc(Q.muni) + '" placeholder="' + esc(t('search')) + '"><select id="selDist"><option value="">' + esc(t('allDistricts')) + '</option>' + dists.map(d => '<option' + (Q.dist === d ? ' selected' : '') + ' value="' + esc(d) + '">' + esc(d) + '</option>').join('') + '<option value="__"' + (Q.dist === '__' ? ' selected' : '') + '>— ' + esc(t('notStated')) + '</option></select>' +
+       '<select id="selKind"><option value="">' + esc(t('tabMuni')) + '</option><option value="muni"' + (Q.kind === 'muni' ? ' selected' : '') + '>' + esc(KIND.muni[LANG]) + '</option><option value="np"' + (Q.kind === 'np' ? ' selected' : '') + '>' + esc(KIND.np[LANG]) + '</option></select></div>';
+  h += '<div class="mhead"><span>' + esc(t('tabMuni')) + '</span><span>' + esc(t('district')) + '</span><span>' + esc(t('heads')) + '</span><span>' + esc(t('overview')) + '</span></div>';
+  h += rows.map(b => {
+    const v = view(b), s = bodyStatus(v), hs = headsOf(b.id), L = headLeader(b.id);
+    const names = hs.length ? hs.slice(0, 3).map(c => '<span style="font-weight:' + (c === L ? '800' : '500') + '">' + esc(cn(c)) + '</span>' + (c.party ? ' <span class="pt" style="background:' + PARTY[c.party].c + ';color:' + PARTY[c.party].t + '">' + esc(pn(c.party)) + '</span>' : '')).join('<br>') : '<span class="s">—</span>';
+    return '<div class="mrow" data-open="' + esc(b.id) + '"><div><h4>' + esc(bn(b)) + '</h4><div class="s">' + esc(KIND[b.kind][LANG]) + (b.wards ? ' · ' + b.wards + ' ' + esc(t('wards')) : '') + (b.head ? ' · ' + esc(b.head) : '') + '</div></div>' +
+      '<div class="s">' + esc(b.district || '—') + '</div><div style="font-size:.82rem">' + names + '</div><div>' + (v.has ? altBar(v) : '') + '<span class="st ' + s.k + '">' + esc(s.s) + '</span></div></div>';
+  }).join('') || '<div class="note">' + esc(t('noMatch')) + '</div>';
+  return h;
+}
+function allHeadEntries() {
+  const out = [];
+  BODIES().forEach(b => headsOf(b.id).forEach(c => out.push({b:b, c:c, role:KIND[b.kind].head[LANG], ward:null})));
+  return out;
+}
+function allWardEntries() {
+  const out = [];
+  Object.keys(DATA.wards).forEach(id => { const b = bodyById(id); if (!b) return; DATA.wards[id].forEach(w => w.candidates.forEach(c => out.push({b:b, c:c, role:null, ward:w.no}))); });
+  return out;
+}
+function entryRow(e) {
+  const cs = CSTAT[e.c.status];
+  return '<div class="frow" data-open="' + esc(e.b.id) + '"><div class="av" style="background:' + colorOfCand(e.c) + ';color:' + textOfCand(e.c) + '">' + esc(initials(cn(e.c))) + '</div><div><div class="nm">' + esc(cn(e.c)) + '</div><div class="s">' + esc(e.ward != null ? t('ward') + ' ' + e.ward + ' · ' : e.role + ' · ') + esc(bn(e.b)) + '</div></div>' +
+    '<div class="r">' + (e.c.party || e.c.alliance ? '<span class="pt" style="background:' + colorOfCand(e.c) + ';color:' + textOfCand(e.c) + '">' + esc(e.c.party ? pn(e.c.party) : (LANG === 'te' ? ALL[e.c.alliance].shTe : ALL[e.c.alliance].sh)) + '</span> ' : '') + '<span class="st ' + cs.cls + '">' + esc(cs[LANG]) + '</span>' + (e.c.votes != null ? '<div class="s mono">' + fmt(e.c.votes) + ' ' + esc(t('votes')) + '</div>' : '') + '</div></div>';
+}
+function viewWin() {
+  const rank = {WON:0, LEADING:1}, es = allHeadEntries().concat(allWardEntries()).filter(e => e.c.status === 'WON' || e.c.status === 'LEADING').sort((a, c) => rank[a.c.status] - rank[c.c.status]);
+  return '<div class="note">' + esc(t('winNote')) + ' (' + es.length + ')</div>' + (es.slice(0, 250).map(entryRow).join('') || '<div class="note">' + esc(t('noMatch')) + '</div>');
+}
+function viewCand() {
+  const es = allHeadEntries().concat(allWardEntries()), q = Q.cand.trim().toLowerCase();
+  let h = '<div class="tools"><input id="qCand" value="' + esc(Q.cand) + '" placeholder="' + esc(t('search')) + '" autocomplete="off"></div><div class="note"><b>' + es.length + '</b> ' + esc(t('loadedC')) + '. ' + esc(t('translit')) + '</div>';
+  if (q.length < 2) return h + '<div class="note">' + esc(t('typeToSearch')) + '</div>';
+  const hit = es.filter(e => (e.c.name + ' ' + (e.c.nameEn || '') + ' ' + (e.c.nameTe || '') + ' ' + bodyName(e.b)).toLowerCase().indexOf(q) >= 0);
+  return h + '<div id="candRes">' + (hit.slice(0, 150).map(entryRow).join('') || '<div class="note">' + esc(t('noMatch')) + '</div>') + '</div>' + (hit.length > 150 ? '<div class="note">' + esc(t('showing')) + ' 150 / ' + hit.length + '</div>' : '');
+}
+function bodyName(b) { return b.en + ' ' + (b.te || ''); }
+function viewMap() { return '<div class="note">' + esc(t('mapTitle')) + '</div><div class="mapwrap"><div id="map"></div></div>'; }
 
-/* ---------- map ---------- */
-function initMap() {
-  if (typeof L === 'undefined') { $('#mapMsg').style.display = 'flex'; return; }
+function renderView() {
+  const el = $('#view');
+  const h = TAB === 'corp' ? viewCorp() : TAB === 'muni' ? viewMuni() : TAB === 'win' ? viewWin() : TAB === 'cand' ? viewCand() : viewMap();
+  const focusId = document.activeElement && document.activeElement.id, pos = document.activeElement && document.activeElement.selectionStart;
+  el.innerHTML = h;
+  if (TAB === 'map') { ensureMap(); }
+  if (focusId && (focusId === 'qMuni' || focusId === 'qCand')) { const n = $('#' + focusId); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} } }
+}
+
+/* ---------- modal ---------- */
+function openBody(id) { MODAL = id; MTAB = 'overview'; SELW = null; renderModal(); $('#modal').classList.add('on'); }
+function closeModal() { MODAL = null; $('#modal').classList.remove('on'); }
+function candRow(c, win) {
+  const cs = CSTAT[c.status];
+  return '<div class="cand' + (win ? ' win' : '') + '"><span class="d" style="background:' + colorOfCand(c) + '"></span><span><b>' + esc(cn(c)) + '</b>' + (c.note ? '<div style="font-size:.7rem;color:#94a3b8">' + esc(c.note) + '</div>' : '') + '</span><span class="pc">' + esc(c.party ? pn(c.party) : (c.alliance ? (LANG === 'te' ? ALL[c.alliance].shTe : ALL[c.alliance].sh) : '')) + ' <span class="st ' + cs.cls + '">' + esc(cs[LANG]) + '</span></span><span class="v">' + (c.votes != null ? fmt(c.votes) : '') + '</span></div>';
+}
+function renderModal() {
+  if (!MODAL) return; const b = bodyById(MODAL); if (!b) return; const v = view(b), f = v.f;
+  const tabs = [['overview', t('overview')], ['heads', t('heads')], ['wards', t('divisions')]];
+  let h = '<div class="mh"><div><h3>' + esc(bn(b)) + '</h3><p>' + esc(KIND[b.kind][LANG]) + (b.district ? ' · ' + esc(b.district) : '') + (v.total ? ' · ' + v.total + ' ' + esc(t('divs')) : '') + (b.head ? ' · ' + esc(t('reservation')) + ': ' + esc(b.head) : '') + '</p></div><button class="xbtn" type="button" data-close="1">' + esc(t('close')) + '</button></div>';
+  h += '<div class="mtabs">' + tabs.map(x => '<button type="button" data-mtab="' + x[0] + '" class="' + (MTAB === x[0] ? 'on' : '') + '">' + esc(x[1]) + '</button>').join('') + '</div><div class="mb">';
+  if (MTAB === 'overview') {
+    if (v.has) {
+      h += altBar(v) + altLegend(v) + '<div style="height:8px"></div>' + benchText(v) + '<div style="height:10px"></div>';
+      const keys = PKEYS.filter(k => (v.p[k] || 0) > 0 || ['TDP','JSP','BJP','YSRCP'].indexOf(k) >= 0);
+      if (Object.keys(v.p).length) h += '<b style="font-size:.8rem;color:#475569">' + esc(t('partyWise')) + '</b>' + keys.map(k => { const n = v.p[k] || 0, d = v.counted || 1; return '<div class="pr"><div class="pl"><span><b>' + esc(pn(k)) + '</b></span><span class="mono" style="font-weight:700">' + n + ' (' + (n / d * 100).toFixed(0) + '%)</span></div><div class="trk"><div class="fill" style="--c:' + PARTY[k].c + ';width:' + (n / d * 100).toFixed(1) + '%"></div></div></div>'; }).join('');
+    } else h += '<div class="note">' + esc(t('awaiting')) + '</div>';
+    const L = headLeader(b.id); if (L) h += '<div style="height:10px"></div>' + headBlock(b);
+    if (f.note) h += '<div class="note" style="margin-top:10px">' + esc(f.note) + '</div>';
+    h += '<div class="kv"><div>' + esc(t('lastUpd')) + ': <strong>' + (f.updatedAt ? esc(istTime(f.updatedAt)) + ' (' + esc(agoText(ageMin(f.updatedAt))) + ')' : esc(t('noTs'))) + '</strong></div><div>' + esc(t('source')) + ': ' +
+      (f.source ? (f.sourceUrl ? '<a href="' + esc(f.sourceUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(f.source) + '</a>' : '<strong>' + esc(f.source) + '</strong>') : '<strong>' + esc(t('noSource')) + '</strong>') + '</div></div>';
+  } else if (MTAB === 'heads') {
+    const hs = headsOf(b.id);
+    h += hs.length ? hs.slice().sort((a, c) => ({WON:0, LEADING:1, CONTESTING:2, LOST:3}[a.status] - {WON:0, LEADING:1, CONTESTING:2, LOST:3}[c.status])).map(c => candRow(c, c.status === 'WON')).join('') + '<div class="kv">' + esc(t('translit')) + '</div>' : '<div class="note">' + esc(t('noHead')) + '</div>';
+  } else {
+    const ws = DATA.wards[b.id] || [];
+    if (!ws.length) h += '<div class="note">' + esc(t('noWards')) + '</div><div class="note">' + esc(t('noCands')) + '</div>';
+    else {
+      const by = {}; ws.forEach(w => by[w.no] = w); const n = Math.max(v.total || 0, Math.max.apply(null, ws.map(w => w.no))); let g = '';
+      for (let i = 1; i <= n; i++) { const w = by[i]; if (!w || w.status === 'PENDING') g += '<div class="wb pend"><div class="n">' + i + '</div><div class="p">—</div></div>'; else g += '<div class="wb' + (SELW === i ? ' on' : '') + '" data-ward="' + i + '"><div class="n">' + i + '</div><div class="p" style="color:' + (w.party ? PARTY[w.party].c : '#64748b') + '">' + esc(w.party ? pn(w.party) : w.status) + '</div></div>'; }
+      h += '<div class="wgrid">' + g + '</div>';
+      const show = SELW != null ? ws.filter(w => w.no === SELW) : ws.filter(w => w.candidates.length);
+      h += show.map(w => '<div class="wcard"><h5><span>' + esc(t('division')) + ' ' + w.no + '</span><span>' + esc(w.status) + (w.margin != null ? ' · ' + esc(t('margin')) + ' ' + fmt(w.margin) : '') + '</span></h5>' + (w.candidates.length ? w.candidates.slice().sort((a, c) => (c.votes || 0) - (a.votes || 0)).map(c => candRow(c, c.status === 'WON')).join('') : '<div class="note" style="margin:8px">' + esc(t('noCands')) + '</div>') + '</div>').join('') || '<div class="note">' + esc(t('noCands')) + '</div>';
+    }
+  }
+  $('#mbox').innerHTML = h + '</div>';
+}
+
+/* ---------- map (Leaflet, optional) ---------- */
+function pinColor(b) { const v = view(b), al = v.lead || headAlliance(b); return al ? ALL[al].c : '#94a3b8'; }
+function ensureMap() {
+  if (typeof L === 'undefined' || !$('#map')) return;
+  if (map) { map.remove(); map = null; pins = null; }
   map = L.map('map', {center:[15.9, 80.4], zoom:6.5, zoomSnap:.25, minZoom:6, maxZoom:12});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {attribution:'&copy; OpenStreetMap &copy; CARTO', subdomains:'abcd', maxZoom:19}).addTo(map);
-  fetch('https://raw.githubusercontent.com/udit-001/india-maps-data/main/geojson/states/andhra-pradesh.geojson').then(r => r.ok ? r.json() : null).then(gj => {
-    if (!gj) return;
-    L.geoJSON(gj, {
-      style:() => ({fillColor:'#94a3b8', weight:1.2, opacity:1, color:'#0e2a47', fillOpacity:.12}),
-      onEachFeature:(ft, ly) => {
-        const p = ft.properties || {}, nm = p.district || p.DISTRICT || p.NAME_2 || p.name || 'District';
-        ly.bindTooltip('<strong>' + esc(nm) + '</strong>', {sticky:true, className:'tip'});
-        ly.on({mouseover:e => e.target.setStyle({fillOpacity:.3, weight:2}), mouseout:e => e.target.setStyle({fillOpacity:.12, weight:1.2})});
-      }
-    }).addTo(map); if (pins) pins.bringToFront && pins.bringToFront();
-  }).catch(() => {});
-  renderPins();
+  pins = L.layerGroup().addTo(map);
+  CORPS.forEach(b => {
+    const v = view(b), has = v.has, html = '<div class="pin" style="--pc:' + pinColor(b) + '"><i></i><span>' + esc(bn(b).replace(/ \(.*\)/, '')) + '</span><b>' + (has ? v.nda + '/' + v.counted : '—') + '</b></div>';
+    L.marker([b.lat, b.lng], {icon:L.divIcon({html:html, className:'', iconSize:[0, 0]})}).on('click', () => openBody(b.id)).addTo(pins);
+  });
 }
 
-/* ---------- leaders (photos from Wikipedia; initials fallback) ---------- */
+/* ---------- events (delegated; feed text is never put in handlers) ---------- */
+document.addEventListener('click', e => {
+  const tg = e.target.closest ? e.target : null; if (!tg) return;
+  const tab = tg.closest('[data-tab]'); if (tab) { TAB = tab.dataset.tab; renderTabs(); renderView(); return; }
+  const op = tg.closest('[data-open]'); if (op) { openBody(op.dataset.open); return; }
+  if (tg.closest('[data-close]') || tg.id === 'modal') { closeModal(); return; }
+  const mt = tg.closest('[data-mtab]'); if (mt) { MTAB = mt.dataset.mtab; renderModal(); return; }
+  const wd = tg.closest('[data-ward]'); if (wd) { const n = +wd.dataset.ward; SELW = SELW === n ? null : n; renderModal(); return; }
+});
+document.addEventListener('input', e => { if (e.target.id === 'qMuni') { Q.muni = e.target.value; renderView(); } if (e.target.id === 'qCand') { Q.cand = e.target.value; renderView(); } });
+document.addEventListener('change', e => { if (e.target.id === 'selDist') { Q.dist = e.target.value; renderView(); } if (e.target.id === 'selKind') { Q.kind = e.target.value; renderView(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && MODAL) closeModal(); });
+function setLang(l) { LANG = l; document.documentElement.lang = l === 'te' ? 'te' : 'en'; $('#lEn').classList.toggle('on', l === 'en'); $('#lTe').classList.toggle('on', l === 'te'); renderAll(); }
+$('#lEn').onclick = () => setLang('en'); $('#lTe').onclick = () => setLang('te');
+
+/* ---------- leaders strip (photos from Wikipedia; initials fallback) ---------- */
 const LEADERS = [
-  {w:'N._Chandrababu_Naidu', n:'N. Chandrababu Naidu', r:'Chief Minister of Andhra Pradesh', p:'TDP', bg:'#fef08a', fg:'#854d0e'},
-  {w:'Pawan_Kalyan', n:'Pawan Kalyan', r:'Deputy Chief Minister', p:'Jana Sena (JSP)', bg:'#fee2e2', fg:'#991b1b'},
-  {w:'Y._S._Jagan_Mohan_Reddy', n:'Y. S. Jagan Mohan Reddy', r:'YSRCP president', p:'YSRCP', bg:'#dbeafe', fg:'#1e40af'},
-  {w:'Daggubati_Purandeswari', n:'D. Purandeswari', r:'BJP leader', p:'BJP', bg:'#ffedd5', fg:'#9a3412'}
+  {w:'N._Chandrababu_Naidu', n:'N. Chandrababu Naidu', r:'Chief Minister · TDP', bg:'#fef08a', fg:'#854d0e'},
+  {w:'Pawan_Kalyan', n:'Pawan Kalyan', r:'Deputy Chief Minister · JSP', bg:'#fee2e2', fg:'#991b1b'},
+  {w:'Y._S._Jagan_Mohan_Reddy', n:'Y. S. Jagan Mohan Reddy', r:'YSRCP president', bg:'#dbeafe', fg:'#1e40af'},
+  {w:'Daggubati_Purandeswari', n:'D. Purandeswari', r:'BJP leader', bg:'#ffedd5', fg:'#9a3412'}
 ];
 function initLeaders() {
-  $('#leaders').innerHTML = LEADERS.map((l, i) => '<div class="leader"><div class="ph" id="ph' + i + '" style="background:' + l.fg + '">' + esc(l.n.split(' ').slice(-1)[0][0]) + '</div><div><h4>' + esc(l.n) + '</h4><p>' + esc(l.r) + '</p><span class="pt" style="background:' + l.bg + ';color:' + l.fg + '">' + esc(l.p) + '</span></div></div>').join('');
+  $('#leaders').innerHTML = LEADERS.map((l, i) => '<div class="leader"><div class="ph" id="ph' + i + '" style="background:' + l.fg + '">' + esc(initials(l.n.split(' ').slice(-1)[0])) + '</div><div><h4>' + esc(l.n) + '</h4><p>' + esc(l.r) + '</p></div></div>').join('');
   LEADERS.forEach((l, i) => {
+    if (typeof fetch !== 'function') return;
     fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + l.w).then(r => r.ok ? r.json() : null).then(d => {
       const u = d && ((d.thumbnail && d.thumbnail.source) || (d.originalimage && d.originalimage.source)); if (!u || !/^https:\/\//.test(u)) return;
-      const old = $('#ph' + i); if (!old) return;
-      const img = document.createElement('img'); img.className = 'ph'; img.alt = l.n; img.referrerPolicy = 'no-referrer'; img.src = u; img.onload = () => old.replaceWith(img);
+      const old = $('#ph' + i); if (!old) return; const img = document.createElement('img'); img.className = 'ph'; img.alt = l.n; img.referrerPolicy = 'no-referrer'; img.src = u; img.onload = () => old.replaceWith(img);
     }).catch(() => {});
   });
 }
@@ -585,29 +1194,24 @@ async function loadFeed() {
   let got = null;
   for (const u of FEEDS) {
     try {
-      const ctl = typeof AbortController === 'function' ? new AbortController() : null; const to = setTimeout(() => ctl && ctl.abort(), 12000);
+      const ctl = typeof AbortController === 'function' ? new AbortController() : null, to = setTimeout(() => ctl && ctl.abort(), 12000);
       const r = await fetch(u + (u.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now(), {cache:'no-store', signal:ctl ? ctl.signal : undefined}); clearTimeout(to);
-      if (!r.ok) continue;
-      const c = clean(await r.json()); if (c) { got = c; break; }
+      if (!r.ok) continue; const c = clean(await r.json()); if (c) { got = c; break; }
     } catch (e) { /* try next source */ }
   }
   lastCheck = Date.now();
-  if (got) {
-    feedOk = true;
-    const sig = JSON.stringify(got);
-    if (sig !== lastSig) { lastSig = sig; DATA = got; renderAll(); } else renderStatus();
-  } else { feedOk = false; renderStatus(); }
+  if (got) { feedOk = true; const sig = JSON.stringify(got); if (sig !== lastSig) { lastSig = sig; DATA = got; renderAll(); } else renderStatus(); }
+  else { feedOk = false; renderStatus(); }
   return !!got;
 }
 let timer = null;
-function startPolling() { stopPolling(); timer = setInterval(() => { if (!document.hidden) loadFeed(); }, POLL_MS); }
-function stopPolling() { if (timer) clearInterval(timer); timer = null; }
+function startPolling() { if (timer) clearInterval(timer); timer = setInterval(() => { if (!document.hidden) loadFeed(); }, POLL_MS); }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) loadFeed(); });
 $('#refreshBtn').onclick = () => { const b = $('#refreshBtn'); b.disabled = true; loadFeed().then(() => { b.disabled = false; }); };
-setInterval(renderStatus, 15000); /* re-evaluate "x min ago" without refetching */
+setInterval(renderStatus, 15000);
 
-/* ---------- boot ---------- */
-initLeaders(); initMap(); renderAll(); loadFeed(); startPolling();
+function renderAll() { renderHero(); renderStatus(); renderTabs(); renderView(); if (MODAL) renderModal(); }
+initLeaders(); renderAll(); loadFeed(); startPolling();
 </script>
 </body>
 </html>
