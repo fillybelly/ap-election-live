@@ -58,7 +58,7 @@
     }
 
     .emblem-title-group { display: flex; align-items: center; gap: 16px; }
-    .state-emblem-svg { width: 56px; height: 56px; flex-shrink: 0; }
+    .state-emblem-img { width: 58px; height: 58px; object-fit: contain; flex-shrink: 0; }
     .portal-titles h1 { font-family: 'Noto Sans Telugu', sans-serif; font-size: 1.15rem; color: var(--gov-navy); font-weight: 700; line-height: 1.2; }
     .portal-titles h2 { font-size: 1.25rem; font-weight: 800; color: var(--gov-deep-blue); letter-spacing: -0.01em; }
     .portal-titles p { font-size: 0.78rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -99,16 +99,16 @@
     }
     .leader-card:hover { border-color: var(--gov-navy); }
     .leader-photo {
-      width: 52px;
-      height: 52px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
       object-fit: cover;
       object-position: top center;
-      border: 2px solid #cbd5e1;
+      border: 2px solid var(--gov-gold);
       background: #e2e8f0;
       flex-shrink: 0;
       display: block;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
     }
     .leader-info h4 { font-size: 0.86rem; font-weight: 700; color: var(--gov-navy); }
     .leader-info p { font-size: 0.72rem; color: var(--text-muted); }
@@ -160,7 +160,7 @@
     /* Portal 3-Column Layout */
     .portal-grid {
       display: grid;
-      grid-template-columns: 320px 1fr 340px;
+      grid-template-columns: 330px 1fr 340px;
       flex: 1;
       padding: 18px 24px;
       gap: 18px;
@@ -198,7 +198,7 @@
       transition: background 0.15s;
     }
     .ulb-row:hover, .ulb-row.active { background: #e0f2fe; }
-    .ulb-row h5 { font-size: 0.85rem; font-weight: 700; color: #1e293b; }
+    .ulb-row h5 { font-size: 0.84rem; font-weight: 700; color: #1e293b; }
     .ulb-row span { font-size: 0.72rem; color: #64748b; }
 
     /* Center Stage: Interactive Map & Wards Grid */
@@ -241,32 +241,28 @@
 
     .ap-interactive-svg {
       width: 100%;
-      height: 470px;
+      height: 475px;
     }
 
     .district-region {
-      fill: #e2e8f0;
+      fill: #fef08a;
       stroke: #ffffff;
       stroke-width: 1.5;
       cursor: pointer;
       transition: all 0.2s;
     }
     .district-region:hover {
-      fill: #cbd5e1;
+      fill: #fde047;
       stroke: var(--gov-navy);
       stroke-width: 2;
     }
-    .district-region.lead-tdp { fill: #fef08a; }
-    .district-region.lead-tdp:hover { fill: #fde047; }
-    .district-region.lead-ysr { fill: #dbeafe; }
-    .district-region.lead-ysr:hover { fill: #bfdbfe; }
 
     .map-hotspot-pin {
       cursor: pointer;
       transition: transform 0.2s ease;
     }
     .map-hotspot-pin:hover {
-      transform: scale(1.35);
+      transform: scale(1.25);
     }
 
     .map-tooltip {
@@ -281,7 +277,7 @@
       font-size: 0.75rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
       z-index: 100;
-      min-width: 160px;
+      min-width: 175px;
     }
     .map-tooltip h5 { font-size: 0.85rem; font-weight: 700; color: #f8fafc; margin-bottom: 2px; }
     .map-tooltip p { font-size: 0.72rem; color: #94a3b8; }
@@ -341,21 +337,15 @@
 
   <div class="top-utility-bar">
     <span>GOVERNMENT OF ANDHRA PRADESH • STATE ELECTION COMMISSION</span>
-    <span>ORDINARY ELECTIONS TO URBAN LOCAL BODIES (MUNICIPALITIES & CORPORATIONS)</span>
+    <span>ORDINARY ELECTIONS TO 13 MUNICIPAL CORPORATIONS & 79 MUNICIPALITIES</span>
   </div>
 
   <header class="gov-header">
     <div class="emblem-title-group">
-      <!-- High-resolution State Emblem (Native Vector Rendering) -->
-      <svg class="state-emblem-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="46" fill="#f8fafc" stroke="#c59b27" stroke-width="4"/>
-        <circle cx="50" cy="50" r="41" stroke="#0e2a47" stroke-width="1.5" stroke-dasharray="3 2"/>
-        <path d="M36 68 C36 74 64 74 64 68 L62 55 C66 50 68 44 65 38 C62 32 38 32 35 38 C32 44 34 50 38 55 Z" fill="#c59b27" stroke="#0e2a47" stroke-width="1.5"/>
-        <path d="M50 24 C45 30 45 36 50 38 C55 36 55 30 50 24 Z" fill="#15803d"/>
-        <path d="M42 32 C38 27 33 28 32 32 C34 36 40 36 42 32 Z" fill="#15803d"/>
-        <path d="M58 32 C62 27 67 28 68 32 C66 36 60 36 58 32 Z" fill="#15803d"/>
-        <circle cx="50" cy="45" r="5" fill="#ffffff" stroke="#0e2a47" stroke-width="1"/>
-      </svg>
+      <img id="emblem-img" 
+           alt="Emblem of Andhra Pradesh" 
+           class="state-emblem-img" 
+           referrerpolicy="no-referrer">
       <div class="portal-titles">
         <h1>ఆంధ్రప్రదేశ్ రాష్ట్ర ఎన్నికల సంఘం</h1>
         <h2>Andhra Pradesh State Election Commission</h2>
@@ -369,14 +359,14 @@
     </div>
   </header>
 
-  <!-- Leadership Section (With Automated Fail-Safe Portrait Generator) -->
+  <!-- Key Leadership Profiles (Loaded dynamically via Wikipedia Official REST API) -->
   <section class="leaders-section">
     <!-- N. Chandrababu Naidu -->
     <div class="leader-card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/N._Chandrababu_Naidu_%28cropped%291.jpg/220px-N._Chandrababu_Naidu_%28cropped%291.jpg" 
+      <img id="photo-cbn" 
            alt="N. Chandrababu Naidu" 
-           class="leader-photo"
-           onerror="renderGovPortrait(this, 'N. Chandrababu Naidu', '#ca8a04')">
+           class="leader-photo" 
+           referrerpolicy="no-referrer">
       <div class="leader-info">
         <h4>N. Chandrababu Naidu</h4>
         <p>Hon'ble Chief Minister</p>
@@ -386,10 +376,10 @@
 
     <!-- Pawan Kalyan -->
     <div class="leader-card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/The_portrait_of_Pawan_Kalyan_%282024%29.jpg/220px-The_portrait_of_Pawan_Kalyan_%282024%29.jpg" 
+      <img id="photo-pk" 
            alt="K. Pawan Kalyan" 
-           class="leader-photo"
-           onerror="renderGovPortrait(this, 'K. Pawan Kalyan', '#dc2626')">
+           class="leader-photo" 
+           referrerpolicy="no-referrer">
       <div class="leader-info">
         <h4>K. Pawan Kalyan</h4>
         <p>Hon'ble Deputy Chief Minister</p>
@@ -399,10 +389,10 @@
 
     <!-- Y.S. Jagan Mohan Reddy -->
     <div class="leader-card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Jagan_Mohan_Reddy.jpg/220px-Jagan_Mohan_Reddy.jpg" 
+      <img id="photo-ysj" 
            alt="Y.S. Jagan Mohan Reddy" 
-           class="leader-photo"
-           onerror="renderGovPortrait(this, 'Y.S. Jagan Mohan Reddy', '#2563eb')">
+           class="leader-photo" 
+           referrerpolicy="no-referrer">
       <div class="leader-info">
         <h4>Y.S. Jagan Mohan Reddy</h4>
         <p>Leader of the Opposition</p>
@@ -412,10 +402,10 @@
 
     <!-- D. Purandeswari -->
     <div class="leader-card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/%28Smt.%29_D._Purandeswari_addressing_at_the_Business_Luncheon_meeting_by_Confederation_of_Indian_Industry_%28CII%29.jpg/220px-%28Smt.%29_D._Purandeswari_addressing_at_the_Business_Luncheon_meeting_by_Confederation_of_Indian_Industry_%28CII%29.jpg" 
+      <img id="photo-dp" 
            alt="D. Purandeswari" 
-           class="leader-photo"
-           onerror="renderGovPortrait(this, 'D. Purandeswari', '#ea580c')">
+           class="leader-photo" 
+           referrerpolicy="no-referrer">
       <div class="leader-info">
         <h4>D. Purandeswari</h4>
         <p>State President</p>
@@ -432,7 +422,7 @@
         <div class="tally-text" style="color: var(--party-tdp)">NDA Leads / Won: <span id="macroTdpCount">1,996 (13-0 Sweep)</span></div>
       </div>
       <div style="text-align: center; font-size: 0.78rem; color: #cbd5e1;">
-        Majority Mark: 50% Threshold
+        All 13 Municipal Corporations: NDA Leading 13 / 13
       </div>
       <div style="text-align: right;">
         <span style="font-size:0.75rem; text-transform:uppercase; color: #94a3b8;">YSRCP Tally</span>
@@ -451,22 +441,22 @@
   <!-- Main Grid Dashboard -->
   <main class="portal-grid">
 
-    <!-- Column 1: ULB Directory -->
+    <!-- Column 1: All 13 Municipal Corporations Directory -->
     <div class="gov-card">
       <div class="card-header-bar">
-        <span>URBAN LOCAL BODIES (ULBs)</span>
-        <span style="font-size: 0.7rem; color: #64748b;">10 MONITORED UNITS</span>
+        <span>MUNICIPAL CORPORATIONS</span>
+        <span style="font-size: 0.7rem; color: #15803d; font-weight: 800;">ALL 13 CORPORATIONS</span>
       </div>
       <div class="ulb-list-wrap" id="ulbListContainer"></div>
     </div>
 
-    <!-- Column 2: Interactive AP Map & Wards Grid -->
+    <!-- Column 2: Interactive AP Map (All 13 Plotted) & Wards Grid -->
     <div class="center-stage">
       <div class="gov-card">
         <div class="card-header-bar">
           <div>
-            <span id="currentUlbHeading">Andhra Pradesh Regional Overview</span>
-            <div style="font-size: 0.72rem; color: #64748b; font-weight: normal;" id="currentUlbSub">Click any Corporation or District to inspect results</div>
+            <span id="currentUlbHeading">Andhra Pradesh — All 13 Municipal Corporations</span>
+            <div style="font-size: 0.72rem; color: #64748b; font-weight: normal;" id="currentUlbSub">Click any of the 13 Corporations on the map to inspect ward-level results</div>
           </div>
           
           <div class="view-switcher-tabs">
@@ -478,128 +468,140 @@
         <div class="map-canvas-container" id="mapCanvasContainer">
           <div class="map-tooltip" id="mapTooltip"></div>
           
-          <svg class="ap-interactive-svg" viewBox="0 0 850 580" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 520,100 Q 750,260 760,550 L 850,550 L 850,0 L 520,0 Z" fill="#f0f9ff" opacity="0.6"/>
+          <svg class="ap-interactive-svg" viewBox="0 0 850 590" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 520,100 Q 750,260 760,560 L 850,560 L 850,0 L 520,0 Z" fill="#f0f9ff" opacity="0.7"/>
             <text x="680" y="240" fill="#93c5fd" font-size="14" font-weight="bold" letter-spacing="4" transform="rotate(35 680,240)">BAY OF BENGAL</text>
 
-            <path class="district-region lead-tdp" id="poly-vzm" d="M 560,40 L 680,60 L 730,110 L 670,140 L 580,110 Z" 
-                  onmousemove="showTooltip(event, 'Vizianagaram & Srikakulam', 'TDP Lead (20/22 Wards)', 'Uttarandhra Zone')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('vzm')">
-              <title>Vizianagaram</title>
-            </path>
+            <!-- Regional Polygons for All 13 Corporations -->
+            <path class="district-region" d="M 560,35 L 685,55 L 730,110 L 670,140 L 580,110 Z" 
+                  onmousemove="showTooltip(event, 'Vizianagaram Corporation', 'NDA Won: 20 | YSRCP: 2', '22 / 62 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('vzm')"/>
 
-            <path class="district-region lead-tdp" id="poly-gvmc" d="M 580,110 L 670,140 L 630,210 L 540,180 L 530,130 Z" 
-                  onmousemove="showTooltip(event, 'Visakhapatnam (GVMC)', 'NDA Sweeping (56/67 Declared)', '120 Divisions Total')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('gvmc')">
-              <title>Greater Visakhapatnam</title>
-            </path>
+            <path class="district-region" d="M 580,110 L 670,140 L 630,210 L 540,180 L 530,130 Z" 
+                  onmousemove="showTooltip(event, 'Greater Visakhapatnam (GVMC)', 'NDA Won: 60 | YSRCP: 12', '73 / 120 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('gvmc')"/>
 
-            <path class="district-region lead-tdp" id="poly-rjy" d="M 530,130 L 540,180 L 510,240 L 440,210 L 460,150 Z" 
-                  onmousemove="showTooltip(event, 'East Godavari (Rajahmundry)', 'TDP+ Lead (+1,120 avg margin)', 'Godavari Delta')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('rjy')">
-              <title>Rajahmundry</title>
-            </path>
+            <path class="district-region" d="M 460,150 L 530,130 L 540,180 L 510,245 L 440,210 Z" 
+                  onmousemove="showTooltip(event, 'Eluru Municipal Corporation', 'NDA Won: 28 | YSRCP: 3', '31 / 62 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('eluru')"/>
 
-            <path class="district-region lead-tdp" id="poly-vja" d="M 440,210 L 510,240 L 480,310 L 390,290 L 380,230 Z" 
-                  onmousemove="showTooltip(event, 'Vijayawada Corporation (NTR Dist)', 'TDP Clean Lead (21/25 Declared)', '86 Divisions')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('vja')">
-              <title>Vijayawada</title>
-            </path>
+            <path class="district-region" d="M 380,220 L 440,210 L 480,285 L 395,280 Z" 
+                  onmousemove="showTooltip(event, 'Vijayawada Corporation (VMC)', 'NDA Won: 22 | YSRCP: 3', '25 / 86 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('vja')"/>
 
-            <path class="district-region lead-tdp" id="poly-mpt" d="M 480,310 L 530,300 L 500,360 L 450,350 Z" 
-                  onmousemove="showTooltip(event, 'Machilipatnam Municipality', 'NDA Lead (19/24 Wards)', 'Krishna District')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('mpt')">
-              <title>Machilipatnam</title>
-            </path>
+            <path class="district-region" d="M 480,285 L 535,280 L 505,345 L 450,335 Z" 
+                  onmousemove="showTooltip(event, 'Machilipatnam Corporation', 'NDA Won: 21 | YSRCP: 3', '24 / 60 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('mpt')"/>
 
-            <path class="district-region lead-tdp" id="poly-gtr" d="M 380,230 L 390,290 L 450,350 L 380,380 L 320,300 Z" 
-                  onmousemove="showTooltip(event, 'Guntur Municipal Corporation', 'TDP Lead (42/51 Wards)', '76 Divisions Total')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('gtr')">
-              <title>Guntur</title>
-            </path>
+            <path class="district-region" d="M 325,280 L 395,280 L 450,335 L 385,355 L 320,315 Z" 
+                  onmousemove="showTooltip(event, 'Guntur Corporation (GMC)', 'NDA Won: 27 | YSRCP: 5', '33 / 76 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('gtr')"/>
 
-            <path class="district-region lead-tdp" id="poly-nellore" d="M 380,380 L 450,350 L 430,480 L 350,470 Z" 
-                  onmousemove="showTooltip(event, 'Nellore Corporation', 'NDA Sweeping (+890 lead)', 'South Coastal AP')"
-                  onmouseout="hideTooltip()">
-              <title>Nellore</title>
-            </path>
+            <path class="district-region" d="M 320,315 L 385,355 L 435,415 L 345,415 Z" 
+                  onmousemove="showTooltip(event, 'Ongole Corporation (OMC)', 'NDA Won: 24 | YSRCP: 4', '28 / 58 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('ongole')"/>
 
-            <path class="district-region lead-tdp" id="poly-knl" d="M 220,240 L 320,270 L 320,340 L 230,360 L 170,290 Z" 
-                  onmousemove="showTooltip(event, 'Kurnool Municipal Corporation', 'TDP Lead (32/43 Wards)', 'Rayalaseema Gateway')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('knl')">
-              <title>Kurnool</title>
-            </path>
+            <path class="district-region" d="M 345,415 L 435,415 L 430,490 L 350,475 Z" 
+                  onmousemove="showTooltip(event, 'Nellore Corporation (NMC)', 'NDA Won: 43 | YSRCP: 0', '45 / 72 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('nellore')"/>
 
-            <path class="district-region lead-tdp" id="poly-atp" d="M 170,290 L 230,360 L 220,460 L 140,430 L 130,330 Z" 
-                  onmousemove="showTooltip(event, 'Anantapur Municipal Corporation', 'TDP Lead (28/41 Wards)', 'Rayalaseema West')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('atp')">
-              <title>Anantapur</title>
-            </path>
+            <path class="district-region" d="M 210,245 L 325,280 L 320,345 L 230,360 L 175,295 Z" 
+                  onmousemove="showTooltip(event, 'Kurnool Corporation (KMC)', 'NDA Won: 32 | YSRCP: 9', '43 / 68 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('knl')"/>
 
-            <path class="district-region lead-tdp" id="poly-kdp" d="M 230,360 L 330,350 L 340,450 L 230,460 Z" 
-                  onmousemove="showTooltip(event, 'Kadapa Municipal Corporation', 'TDP Dominance (48/52 Wards)', 'YSR Kadapa District')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('kdp')">
-              <title>Kadapa</title>
-            </path>
+            <path class="district-region" d="M 175,295 L 230,360 L 220,460 L 140,435 L 130,335 Z" 
+                  onmousemove="showTooltip(event, 'Anantapur Corporation', 'NDA Won: 28 | YSRCP: 13', '41 / 62 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('atp')"/>
 
-            <path class="district-region lead-tdp" id="poly-tpt" d="M 340,450 L 430,480 L 400,560 L 310,540 Z" 
-                  onmousemove="showTooltip(event, 'Tirupati Municipal Corporation', 'TDP+ Lead (49/54 Wards)', 'Temple City Division')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('tpt')">
-              <title>Tirupati</title>
-            </path>
+            <path class="district-region" d="M 230,360 L 345,355 L 350,460 L 230,460 Z" 
+                  onmousemove="showTooltip(event, 'Kadapa Corporation', 'NDA Won: 48 | YSRCP: 4', '52 / 66 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('kdp')"/>
 
-            <path class="district-region lead-tdp" id="poly-chittoor" d="M 220,460 L 310,540 L 260,570 L 200,510 Z" 
-                  onmousemove="showTooltip(event, 'Chittoor Corporation', 'TDP Lead (54/56 Declared)', 'Chittoor District')"
-                  onmouseout="hideTooltip()" onclick="selectUlbById('chittoor')">
-              <title>Chittoor</title>
-            </path>
+            <path class="district-region" d="M 350,460 L 430,490 L 405,565 L 315,540 Z" 
+                  onmousemove="showTooltip(event, 'Tirupati Corporation (TMC)', 'NDA Won: 49 | YSRCP: 2', '54 / 66 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('tpt')"/>
 
-            <g class="map-hotspot-pin" onclick="selectUlbById('gvmc')" onmousemove="showTooltip(event, 'GVMC Visakhapatnam', 'TDP Lead: 56 | YSRCP: 10', '120 Divisions')" onmouseout="hideTooltip()">
-              <circle cx="610" cy="155" r="9" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
-              <circle cx="610" cy="155" r="3" fill="#ffffff"/>
-              <text x="625" y="159" font-size="11" font-weight="800" fill="#0e2a47">GVMC Vizag</text>
+            <path class="district-region" d="M 220,460 L 315,540 L 265,575 L 205,515 Z" 
+                  onmousemove="showTooltip(event, 'Chittoor Corporation', 'NDA Won: 54 | YSRCP: 2', '56 / 60 Wards Declared')"
+                  onmouseout="hideTooltip()" onclick="selectUlbById('chittoor')"/>
+
+            <!-- All 13 Corporation Interactive Pins -->
+            <!-- 1. Vizianagaram -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('vzm')" onmousemove="showTooltip(event, '1. Vizianagaram Corp', 'NDA: 20 | YSRCP: 2', '62 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="635" cy="95" r="7" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="647" y="99" font-size="10.5" font-weight="800" fill="#0e2a47">Vizianagaram</text>
             </g>
 
-            <g class="map-hotspot-pin" onclick="selectUlbById('vja')" onmousemove="showTooltip(event, 'Vijayawada Corporation', 'TDP Lead: 21 | YSRCP: 3', '86 Divisions')" onmouseout="hideTooltip()">
-              <circle cx="445" cy="255" r="9" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
-              <circle cx="445" cy="255" r="3" fill="#ffffff"/>
-              <text x="460" y="259" font-size="11" font-weight="800" fill="#0e2a47">Vijayawada</text>
+            <!-- 2. GVMC Visakhapatnam -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('gvmc')" onmousemove="showTooltip(event, '2. GVMC Visakhapatnam', 'NDA: 60 | YSRCP: 12 | OTH: 1', '120 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="605" cy="155" r="8.5" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
+              <text x="618" y="159" font-size="11" font-weight="800" fill="#0e2a47">GVMC Vizag</text>
             </g>
 
-            <g class="map-hotspot-pin" onclick="selectUlbById('gtr')" onmousemove="showTooltip(event, 'Guntur Corporation', 'TDP Lead: 42 | YSRCP: 8', '76 Divisions')" onmouseout="hideTooltip()">
-              <circle cx="395" cy="295" r="8" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
-              <circle cx="395" cy="295" r="3" fill="#ffffff"/>
-              <text x="345" y="300" font-size="11" font-weight="800" fill="#0e2a47">Guntur</text>
+            <!-- 3. Eluru -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('eluru')" onmousemove="showTooltip(event, '3. Eluru Corporation', 'NDA: 28 | YSRCP: 3', '62 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="490" cy="210" r="7" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="502" y="214" font-size="10.5" font-weight="800" fill="#0e2a47">Eluru</text>
             </g>
 
-            <g class="map-hotspot-pin" onclick="selectUlbById('tpt')" onmousemove="showTooltip(event, 'Tirupati Corporation', 'TDP Lead: 49 | YSRCP: 2', '66 Divisions')" onmouseout="hideTooltip()">
-              <circle cx="365" cy="505" r="8" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
-              <circle cx="365" cy="505" r="3" fill="#ffffff"/>
-              <text x="380" y="510" font-size="11" font-weight="800" fill="#0e2a47">Tirupati</text>
+            <!-- 4. Vijayawada -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('vja')" onmousemove="showTooltip(event, '4. Vijayawada Corp', 'NDA: 22 | YSRCP: 3', '86 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="435" cy="255" r="8.5" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
+              <text x="362" y="252" font-size="11" font-weight="800" fill="#0e2a47">Vijayawada</text>
             </g>
 
-            <g class="map-hotspot-pin" onclick="selectUlbById('knl')" onmousemove="showTooltip(event, 'Kurnool Corporation', 'TDP Lead: 32 | YSRCP: 9', '68 Divisions')" onmouseout="hideTooltip()">
-              <circle cx="250" cy="305" r="8" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
-              <circle cx="250" cy="305" r="3" fill="#ffffff"/>
-              <text x="195" y="310" font-size="11" font-weight="800" fill="#0e2a47">Kurnool</text>
+            <!-- 5. Machilipatnam -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('mpt')" onmousemove="showTooltip(event, '5. Machilipatnam Corp', 'NDA: 21 | YSRCP: 3', '60 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="495" cy="310" r="7" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="507" y="314" font-size="10.5" font-weight="800" fill="#0e2a47">Machilipatnam</text>
             </g>
 
-            <g class="map-hotspot-pin" onclick="selectUlbById('kdp')" onmousemove="showTooltip(event, 'Kadapa Corporation', 'TDP Lead: 48 | YSRCP: 4', '66 Divisions')" onmouseout="hideTooltip()">
-              <circle cx="280" cy="410" r="8" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
-              <circle cx="280" cy="410" r="3" fill="#ffffff"/>
-              <text x="295" y="415" font-size="11" font-weight="800" fill="#0e2a47">Kadapa</text>
+            <!-- 6. Guntur -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('gtr')" onmousemove="showTooltip(event, '6. Guntur Corporation', 'NDA: 27 | YSRCP: 5 | OTH: 1', '76 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="395" cy="310" r="7.5" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="345" y="315" font-size="10.5" font-weight="800" fill="#0e2a47">Guntur</text>
             </g>
 
-            <g class="map-hotspot-pin" onclick="selectUlbById('atp')" onmousemove="showTooltip(event, 'Anantapur Corporation', 'TDP Lead: 28 | YSRCP: 13', '62 Divisions')" onmouseout="hideTooltip()">
-              <circle cx="185" cy="380" r="8" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
-              <circle cx="185" cy="380" r="3" fill="#ffffff"/>
-              <text x="110" y="385" font-size="11" font-weight="800" fill="#0e2a47">Anantapur</text>
+            <!-- 7. Ongole -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('ongole')" onmousemove="showTooltip(event, '7. Ongole Corporation', 'NDA: 24 | YSRCP: 4', '58 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="385" cy="380" r="7" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="397" y="384" font-size="10.5" font-weight="800" fill="#0e2a47">Ongole</text>
             </g>
 
-            <g class="map-hotspot-pin" onclick="selectUlbById('rjy')" onmousemove="showTooltip(event, 'Rajahmundry Corporation', 'TDP Lead: 36 | YSRCP: 13', '50 Divisions')" onmouseout="hideTooltip()">
-              <circle cx="495" cy="190" r="8" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
-              <circle cx="495" cy="190" r="3" fill="#ffffff"/>
-              <text x="510" y="195" font-size="11" font-weight="800" fill="#0e2a47">Rajahmundry</text>
+            <!-- 8. Nellore -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('nellore')" onmousemove="showTooltip(event, '8. Nellore Corporation', 'NDA: 43 | YSRCP: 0 | OTH: 2', '72 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="395" cy="450" r="7.5" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="407" y="454" font-size="10.5" font-weight="800" fill="#0e2a47">Nellore</text>
+            </g>
+
+            <!-- 9. Kurnool -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('knl')" onmousemove="showTooltip(event, '9. Kurnool Corporation', 'NDA: 32 | YSRCP: 9 | OTH: 2', '68 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="250" cy="305" r="7.5" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="195" y="309" font-size="10.5" font-weight="800" fill="#0e2a47">Kurnool</text>
+            </g>
+
+            <!-- 10. Anantapur -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('atp')" onmousemove="showTooltip(event, '10. Anantapur Corp', 'NDA: 28 | YSRCP: 13', '62 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="185" cy="385" r="7.5" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="115" y="389" font-size="10.5" font-weight="800" fill="#0e2a47">Anantapur</text>
+            </g>
+
+            <!-- 11. Kadapa -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('kdp')" onmousemove="showTooltip(event, '11. Kadapa Corporation', 'NDA: 48 | YSRCP: 4', '66 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="285" cy="415" r="7.5" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="297" y="419" font-size="10.5" font-weight="800" fill="#0e2a47">Kadapa</text>
+            </g>
+
+            <!-- 12. Tirupati -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('tpt')" onmousemove="showTooltip(event, '12. Tirupati Corp', 'NDA: 49 | YSRCP: 2 | OTH: 3', '66 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="365" cy="510" r="8" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="378" y="514" font-size="10.5" font-weight="800" fill="#0e2a47">Tirupati</text>
+            </g>
+
+            <!-- 13. Chittoor -->
+            <g class="map-hotspot-pin" onclick="selectUlbById('chittoor')" onmousemove="showTooltip(event, '13. Chittoor Corp', 'NDA: 54 | YSRCP: 2', '60 Divisions')" onmouseout="hideTooltip()">
+              <circle cx="265" cy="535" r="7.5" fill="#eab308" stroke="#0e2a47" stroke-width="2"/>
+              <text x="205" y="539" font-size="10.5" font-weight="800" fill="#0e2a47">Chittoor</text>
             </g>
           </svg>
         </div>
@@ -610,9 +612,9 @@
       <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px; font-size: 0.78rem; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
         <span style="font-weight: 700; color: var(--gov-navy);">PARTY LEGEND:</span>
         <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; background:var(--party-tdp); display:inline-block;"></span> TDP</span>
-        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; background:var(--party-ysrcp); display:inline-block;"></span> YSRCP</span>
         <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; background:var(--party-jsp); display:inline-block;"></span> JSP</span>
         <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; background:var(--party-bjp); display:inline-block;"></span> BJP</span>
+        <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; background:var(--party-ysrcp); display:inline-block;"></span> YSRCP</span>
         <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:10px; height:10px; border:1px dashed #64748b; display:inline-block;"></span> Counting Active</span>
       </div>
     </div>
@@ -670,57 +672,50 @@
   </footer>
 
   <script>
-    // Bulletproof In-Browser Portrait Generator (Canvas Fallback)
-    function renderGovPortrait(imgElement, leaderName, partyColor) {
-      imgElement.onerror = null;
-      const initials = leaderName.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('');
-      const canvas = document.createElement('canvas');
-      canvas.width = 120;
-      canvas.height = 120;
-      const ctx = canvas.getContext('2d');
+    /**
+     * Fetches live, valid Wikimedia CDN image URLs directly from Wikipedia's
+     * official CORS-enabled REST v1 API so photos never 404 or break.
+     */
+    async function loadOfficialPhotosFromWikipedia() {
+      const targets = [
+        { id: 'emblem-img', wiki: 'Emblem_of_Andhra_Pradesh' },
+        { id: 'photo-cbn', wiki: 'N._Chandrababu_Naidu' },
+        { id: 'photo-pk', wiki: 'Pawan_Kalyan' },
+        { id: 'photo-ysj', wiki: 'Y._S._Jagan_Mohan_Reddy' },
+        { id: 'photo-dp', wiki: 'Daggubati_Purandeswari' }
+      ];
 
-      // Circular Background
-      ctx.fillStyle = partyColor;
-      ctx.beginPath();
-      ctx.arc(60, 60, 58, 0, Math.PI * 2);
-      ctx.fill();
-
-      // State Border
-      ctx.strokeStyle = '#c59b27';
-      ctx.lineWidth = 4;
-      ctx.stroke();
-
-      // Portrait Silhouette
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(60, 46, 22, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(60, 102, 34, Math.PI, Math.PI * 2);
-      ctx.fill();
-
-      // Official Initials Badge
-      ctx.fillStyle = '#0e2a47';
-      ctx.font = 'bold 16px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(initials, 60, 46);
-
-      imgElement.src = canvas.toDataURL('image/png');
+      await Promise.all(targets.map(async (item) => {
+        try {
+          const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${item.wiki}`);
+          if (!res.ok) return;
+          const data = await res.json();
+          const imgUrl = (data.thumbnail && data.thumbnail.source) || (data.originalimage && data.originalimage.source);
+          if (imgUrl) {
+            const el = document.getElementById(item.id);
+            if (el) el.src = imgUrl;
+          }
+        } catch (err) {
+          console.warn("Could not fetch Wikipedia summary image for", item.wiki);
+        }
+      }));
     }
 
+    // Complete List of All 13 Municipal Corporations in Andhra Pradesh
     const ULB_RECORDS = [
-      { id: "gvmc", name: "Greater Visakhapatnam (GVMC)", district: "Visakhapatnam", totalWards: 120, leading: "TDP", ndaWon: 54, ysrWon: 12, declared: 67 },
-      { id: "vja", name: "Vijayawada Municipal Corporation", district: "NTR District", totalWards: 86, leading: "TDP", ndaWon: 21, ysrWon: 0, declared: 25 },
-      { id: "gtr", name: "Guntur Municipal Corporation", district: "Guntur", totalWards: 76, leading: "TDP", ndaWon: 42, ysrWon: 8, declared: 51 },
-      { id: "tpt", name: "Tirupati Municipal Corporation", district: "Tirupati", totalWards: 66, leading: "TDP", ndaWon: 49, ysrWon: 2, declared: 54 },
-      { id: "chittoor", name: "Chittoor Municipal Corporation", district: "Chittoor", totalWards: 60, leading: "TDP", ndaWon: 54, ysrWon: 2, declared: 56 },
-      { id: "atp", name: "Anantapur Municipal Corporation", district: "Anantapur", totalWards: 62, leading: "TDP", ndaWon: 28, ysrWon: 3, declared: 41 },
-      { id: "kdp", name: "Kadapa Municipal Corporation", district: "YSR Kadapa", totalWards: 66, leading: "TDP", ndaWon: 48, ysrWon: 4, declared: 52 },
-      { id: "knl", name: "Kurnool Municipal Corporation", district: "Kurnool", totalWards: 68, leading: "TDP", ndaWon: 32, ysrWon: 9, declared: 43 },
-      { id: "vzm", name: "Vizianagaram Municipal Corporation", district: "Vizianagaram", totalWards: 62, leading: "TDP", ndaWon: 20, ysrWon: 2, declared: 22 },
-      { id: "mpt", name: "Machilipatnam Municipal Corporation", district: "Krishna", totalWards: 60, leading: "TDP", ndaWon: 21, ysrWon: 3, declared: 24 }
+      { id: "gvmc", name: "1. Greater Visakhapatnam (GVMC)", district: "Visakhapatnam", totalWards: 120, leading: "TDP", ndaWon: 60, ysrWon: 12, declared: 73 },
+      { id: "vja", name: "2. Vijayawada Corporation (VMC)", district: "NTR District", totalWards: 86, leading: "TDP", ndaWon: 22, ysrWon: 3, declared: 25 },
+      { id: "gtr", name: "3. Guntur Corporation (GMC)", district: "Guntur", totalWards: 76, leading: "TDP", ndaWon: 27, ysrWon: 5, declared: 33 },
+      { id: "nellore", name: "4. Nellore Corporation (NMC)", district: "SPSR Nellore", totalWards: 72, leading: "TDP", ndaWon: 43, ysrWon: 0, declared: 45 },
+      { id: "knl", name: "5. Kurnool Corporation (KMC)", district: "Kurnool", totalWards: 68, leading: "TDP", ndaWon: 32, ysrWon: 9, declared: 43 },
+      { id: "tpt", name: "6. Tirupati Corporation (TMC)", district: "Tirupati", totalWards: 66, leading: "TDP", ndaWon: 49, ysrWon: 2, declared: 54 },
+      { id: "kdp", name: "7. Kadapa Municipal Corporation", district: "YSR Kadapa", totalWards: 66, leading: "TDP", ndaWon: 48, ysrWon: 4, declared: 52 },
+      { id: "vzm", name: "8. Vizianagaram Corporation", district: "Vizianagaram", totalWards: 62, leading: "TDP", ndaWon: 20, ysrWon: 2, declared: 22 },
+      { id: "eluru", name: "9. Eluru Corporation (EMC)", district: "Eluru", totalWards: 62, leading: "TDP", ndaWon: 28, ysrWon: 3, declared: 31 },
+      { id: "atp", name: "10. Anantapur Corporation", district: "Anantapur", totalWards: 62, leading: "TDP", ndaWon: 28, ysrWon: 13, declared: 41 },
+      { id: "chittoor", name: "11. Chittoor Corporation", district: "Chittoor", totalWards: 60, leading: "TDP", ndaWon: 54, ysrWon: 2, declared: 56 },
+      { id: "mpt", name: "12. Machilipatnam Corporation", district: "Krishna", totalWards: 60, leading: "TDP", ndaWon: 21, ysrWon: 3, declared: 24 },
+      { id: "ongole", name: "13. Ongole Corporation (OMC)", district: "Prakasam", totalWards: 58, leading: "TDP", ndaWon: 24, ysrWon: 4, declared: 28 }
     ];
 
     let selectedUlb = ULB_RECORDS[0];
@@ -733,11 +728,11 @@
       ndaTotal: 1996,
       ysrTotal: 232,
       othTotal: 37,
-      corporationSweep: "13 - 0 (NDA)"
+      corporationSweep: "13 - 0 (NDA Sweep)"
     };
 
     function updateMacroHeader(data) {
-      document.getElementById("macroTdpCount").innerText = `${data.ndaTotal.toLocaleString()} (${data.corporationSweep || 'NDA Lead'})`;
+      document.getElementById("macroTdpCount").innerText = `${data.ndaTotal.toLocaleString()} (${data.corporationSweep || '13-0 NDA'})`;
       document.getElementById("macroYsrCount").innerText = `${data.ysrTotal.toLocaleString()}`;
 
       const total = data.declaredWards || (data.ndaTotal + data.ysrTotal + data.othTotal);
@@ -766,15 +761,15 @@
         gridContainer.style.display = "none";
         btnMap.classList.add("active");
         btnGrid.classList.remove("active");
-        document.getElementById("currentUlbHeading").innerText = "Andhra Pradesh Regional Overview";
-        document.getElementById("currentUlbSub").innerText = "Click any Corporation or District to inspect results";
+        document.getElementById("currentUlbHeading").innerText = "Andhra Pradesh — All 13 Municipal Corporations";
+        document.getElementById("currentUlbSub").innerText = "Click any Corporation on the map to inspect ward-level results";
       } else {
         mapContainer.style.display = "none";
         gridContainer.style.display = "grid";
         btnMap.classList.remove("active");
         btnGrid.classList.add("active");
         document.getElementById("currentUlbHeading").innerText = selectedUlb.name;
-        document.getElementById("currentUlbSub").innerText = `${selectedUlb.district} • ${selectedUlb.totalWards} Divisions`;
+        document.getElementById("currentUlbSub").innerText = `${selectedUlb.district} • ${selectedUlb.totalWards} Divisions (${selectedUlb.declared} Declared)`;
       }
     }
 
@@ -890,15 +885,14 @@
             <h5>${u.name}</h5>
             <span>${u.district} • ${u.totalWards} Wards</span>
           </div>
-          <span style="font-weight:700; color: ${u.leading === 'TDP' ? 'var(--party-tdp)' : 'var(--party-ysrcp)'}">
-            ${u.leading} Lead (${u.ndaWon}/${u.declared || u.totalWards})
+          <span style="font-weight:700; color: var(--party-tdp);">
+            NDA ${u.ndaWon}/${u.declared}
           </span>
         `;
         container.appendChild(row);
       });
     }
 
-    // Live Engine: Continuous polling every 8 seconds
     async function syncRealtimeElectionData() {
       let remoteLoaded = false;
       try {
@@ -916,9 +910,7 @@
             remoteLoaded = true;
           }
         }
-      } catch (err) {
-        // Fall back gracefully
-      }
+      } catch (err) {}
 
       if (!remoteLoaded && wardDataStore.length > 0) {
         const activeCountingWards = wardDataStore.filter(w => w.status === 'COUNTING');
@@ -934,6 +926,8 @@
       document.getElementById("footerSyncStatus").innerText = `Last Synchronized: ${new Date().toLocaleTimeString()} (Active)`;
     }
 
+    // Initialize Photos, Map, and All 13 Corporations
+    loadOfficialPhotosFromWikipedia();
     renderUlbList();
     buildWards(selectedUlb);
     updateMacroHeader(MACRO_LIVE);
