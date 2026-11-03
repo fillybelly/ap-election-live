@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>State Election Commission, Andhra Pradesh | ULB General Elections - Trends & Results</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,7 +58,7 @@
     }
 
     .emblem-title-group { display: flex; align-items: center; gap: 16px; }
-    .state-emblem { width: 56px; height: 56px; object-fit: contain; flex-shrink: 0; }
+    .state-emblem-svg { width: 56px; height: 56px; flex-shrink: 0; }
     .portal-titles h1 { font-family: 'Noto Sans Telugu', sans-serif; font-size: 1.15rem; color: var(--gov-navy); font-weight: 700; line-height: 1.2; }
     .portal-titles h2 { font-size: 1.25rem; font-weight: 800; color: var(--gov-deep-blue); letter-spacing: -0.01em; }
     .portal-titles p { font-size: 0.78rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -77,7 +78,7 @@
     .live-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 6px #10b981; animation: livePulse 1.5s infinite; }
     @keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-    /* Leaders Section with Real Photos */
+    /* Leaders Section */
     .leaders-section {
       background: #ffffff;
       border-bottom: 1px solid var(--border-color);
@@ -345,10 +346,16 @@
 
   <header class="gov-header">
     <div class="emblem-title-group">
-      <!-- High-resolution State Emblem via Cloudflare-backed proxy -->
-      <img src="https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/3/37/Emblem_of_Andhra_Pradesh.svg&w=120" 
-           alt="State Emblem of Andhra Pradesh" 
-           class="state-emblem">
+      <!-- High-resolution State Emblem (Native Vector Rendering) -->
+      <svg class="state-emblem-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="#f8fafc" stroke="#c59b27" stroke-width="4"/>
+        <circle cx="50" cy="50" r="41" stroke="#0e2a47" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <path d="M36 68 C36 74 64 74 64 68 L62 55 C66 50 68 44 65 38 C62 32 38 32 35 38 C32 44 34 50 38 55 Z" fill="#c59b27" stroke="#0e2a47" stroke-width="1.5"/>
+        <path d="M50 24 C45 30 45 36 50 38 C55 36 55 30 50 24 Z" fill="#15803d"/>
+        <path d="M42 32 C38 27 33 28 32 32 C34 36 40 36 42 32 Z" fill="#15803d"/>
+        <path d="M58 32 C62 27 67 28 68 32 C66 36 60 36 58 32 Z" fill="#15803d"/>
+        <circle cx="50" cy="45" r="5" fill="#ffffff" stroke="#0e2a47" stroke-width="1"/>
+      </svg>
       <div class="portal-titles">
         <h1>ఆంధ్రప్రదేశ్ రాష్ట్ర ఎన్నికల సంఘం</h1>
         <h2>Andhra Pradesh State Election Commission</h2>
@@ -362,13 +369,14 @@
     </div>
   </header>
 
-  <!-- Real Photographic Portraits (Fetched via Global Image Proxy) -->
+  <!-- Leadership Section (With Automated Fail-Safe Portrait Generator) -->
   <section class="leaders-section">
     <!-- N. Chandrababu Naidu -->
     <div class="leader-card">
-      <img src="https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/0/07/N._Chandrababu_Naidu_(cropped)1.jpg&w=140&h=140&fit=cover&a=top" 
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/N._Chandrababu_Naidu_%28cropped%291.jpg/220px-N._Chandrababu_Naidu_%28cropped%291.jpg" 
            alt="N. Chandrababu Naidu" 
-           class="leader-photo">
+           class="leader-photo"
+           onerror="renderGovPortrait(this, 'N. Chandrababu Naidu', '#ca8a04')">
       <div class="leader-info">
         <h4>N. Chandrababu Naidu</h4>
         <p>Hon'ble Chief Minister</p>
@@ -378,9 +386,10 @@
 
     <!-- Pawan Kalyan -->
     <div class="leader-card">
-      <img src="https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/6/6d/The_portrait_of_Pawan_Kalyan_(2024).jpg&w=140&h=140&fit=cover&a=top" 
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/The_portrait_of_Pawan_Kalyan_%282024%29.jpg/220px-The_portrait_of_Pawan_Kalyan_%282024%29.jpg" 
            alt="K. Pawan Kalyan" 
-           class="leader-photo">
+           class="leader-photo"
+           onerror="renderGovPortrait(this, 'K. Pawan Kalyan', '#dc2626')">
       <div class="leader-info">
         <h4>K. Pawan Kalyan</h4>
         <p>Hon'ble Deputy Chief Minister</p>
@@ -390,9 +399,10 @@
 
     <!-- Y.S. Jagan Mohan Reddy -->
     <div class="leader-card">
-      <img src="https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/d/da/Jagan_Mohan_Reddy.jpg&w=140&h=140&fit=cover&a=top" 
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Jagan_Mohan_Reddy.jpg/220px-Jagan_Mohan_Reddy.jpg" 
            alt="Y.S. Jagan Mohan Reddy" 
-           class="leader-photo">
+           class="leader-photo"
+           onerror="renderGovPortrait(this, 'Y.S. Jagan Mohan Reddy', '#2563eb')">
       <div class="leader-info">
         <h4>Y.S. Jagan Mohan Reddy</h4>
         <p>Leader of the Opposition</p>
@@ -402,9 +412,10 @@
 
     <!-- D. Purandeswari -->
     <div class="leader-card">
-      <img src="https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/commons/4/4e/(Smt.)_D._Purandeswari_addressing_at_the_Business_Luncheon_meeting_by_Confederation_of_Indian_Industry_(CII).jpg&w=140&h=140&fit=cover&a=top" 
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/%28Smt.%29_D._Purandeswari_addressing_at_the_Business_Luncheon_meeting_by_Confederation_of_Indian_Industry_%28CII%29.jpg/220px-%28Smt.%29_D._Purandeswari_addressing_at_the_Business_Luncheon_meeting_by_Confederation_of_Indian_Industry_%28CII%29.jpg" 
            alt="D. Purandeswari" 
-           class="leader-photo">
+           class="leader-photo"
+           onerror="renderGovPortrait(this, 'D. Purandeswari', '#ea580c')">
       <div class="leader-info">
         <h4>D. Purandeswari</h4>
         <p>State President</p>
@@ -413,7 +424,7 @@
     </div>
   </section>
 
-  <!-- Macro Majority Bar -->
+  <!-- Macro Results Banner -->
   <div class="results-banner">
     <div class="banner-head">
       <div>
@@ -464,7 +475,6 @@
           </div>
         </div>
 
-        <!-- Interactive Map Container -->
         <div class="map-canvas-container" id="mapCanvasContainer">
           <div class="map-tooltip" id="mapTooltip"></div>
           
@@ -472,7 +482,6 @@
             <path d="M 520,100 Q 750,260 760,550 L 850,550 L 850,0 L 520,0 Z" fill="#f0f9ff" opacity="0.6"/>
             <text x="680" y="240" fill="#93c5fd" font-size="14" font-weight="bold" letter-spacing="4" transform="rotate(35 680,240)">BAY OF BENGAL</text>
 
-            <!-- District / Region Polygonal Groups -->
             <path class="district-region lead-tdp" id="poly-vzm" d="M 560,40 L 680,60 L 730,110 L 670,140 L 580,110 Z" 
                   onmousemove="showTooltip(event, 'Vizianagaram & Srikakulam', 'TDP Lead (20/22 Wards)', 'Uttarandhra Zone')"
                   onmouseout="hideTooltip()" onclick="selectUlbById('vzm')">
@@ -545,7 +554,6 @@
               <title>Chittoor</title>
             </path>
 
-            <!-- Corporation Hotspot Markers -->
             <g class="map-hotspot-pin" onclick="selectUlbById('gvmc')" onmousemove="showTooltip(event, 'GVMC Visakhapatnam', 'TDP Lead: 56 | YSRCP: 10', '120 Divisions')" onmouseout="hideTooltip()">
               <circle cx="610" cy="155" r="9" fill="#eab308" stroke="#0e2a47" stroke-width="2.5"/>
               <circle cx="610" cy="155" r="3" fill="#ffffff"/>
@@ -662,6 +670,46 @@
   </footer>
 
   <script>
+    // Bulletproof In-Browser Portrait Generator (Canvas Fallback)
+    function renderGovPortrait(imgElement, leaderName, partyColor) {
+      imgElement.onerror = null;
+      const initials = leaderName.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('');
+      const canvas = document.createElement('canvas');
+      canvas.width = 120;
+      canvas.height = 120;
+      const ctx = canvas.getContext('2d');
+
+      // Circular Background
+      ctx.fillStyle = partyColor;
+      ctx.beginPath();
+      ctx.arc(60, 60, 58, 0, Math.PI * 2);
+      ctx.fill();
+
+      // State Border
+      ctx.strokeStyle = '#c59b27';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // Portrait Silhouette
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(60, 46, 22, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(60, 102, 34, Math.PI, Math.PI * 2);
+      ctx.fill();
+
+      // Official Initials Badge
+      ctx.fillStyle = '#0e2a47';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(initials, 60, 46);
+
+      imgElement.src = canvas.toDataURL('image/png');
+    }
+
     const ULB_RECORDS = [
       { id: "gvmc", name: "Greater Visakhapatnam (GVMC)", district: "Visakhapatnam", totalWards: 120, leading: "TDP", ndaWon: 54, ysrWon: 12, declared: 67 },
       { id: "vja", name: "Vijayawada Municipal Corporation", district: "NTR District", totalWards: 86, leading: "TDP", ndaWon: 21, ysrWon: 0, declared: 25 },
@@ -850,6 +898,7 @@
       });
     }
 
+    // Live Engine: Continuous polling every 8 seconds
     async function syncRealtimeElectionData() {
       let remoteLoaded = false;
       try {
